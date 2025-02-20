@@ -84,12 +84,14 @@ const httpRequestService = {
     }
   },
   getPostById: async (id: string) => {
+    console.log(`${url}/post/${id}`)
     const res = await axios.get(`${url}/post/${id}`, {
       headers: {
         Authorization: localStorage.getItem("token"),
       },
     });
     if (res.status === 200) {
+      console.log(res.data);
       return res.data;
     }
   },

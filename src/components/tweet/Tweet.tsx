@@ -38,6 +38,11 @@ const Tweet = ({post}: TweetProps) => {
   };
 
   const handleReaction = async (type: string) => {
+
+    if (!actualPost.reactions) {
+      actualPost.reactions = [];
+    }
+
     const reacted = actualPost.reactions.find(
         (r) => r.type === type && r.userId === user?.id
     );
@@ -51,6 +56,11 @@ const Tweet = ({post}: TweetProps) => {
   };
 
   const hasReactedByType = (type: string): boolean => {
+
+    if (!actualPost.reactions) {
+      return false;
+    }
+
     return actualPost.reactions.some(
         (r) => r.type === type && r.userId === user?.id
     );

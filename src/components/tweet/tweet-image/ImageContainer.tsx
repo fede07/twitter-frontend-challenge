@@ -15,6 +15,7 @@ const ImageContainer = ({
   editable,
   removeFunction,
 }: ImageContainerProps) => {
+
   return (
     <StyledContainer maxWidth={"100%"} alignItems={"flex-end"} gap={"8px"}>
       <StyledOverflowContainer

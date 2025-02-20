@@ -22,6 +22,10 @@ const TweetImage = ({
 }: TweetImageProps) => {
   const [showModal, setShowModal] = useState<boolean>(false);
 
+  // const bucketName = process.env.AWS_S3_BUCKET
+  // const region = process.env.AWS_REGION
+  // const url = `https://${bucketName}.s3.${region}.amazonaws.com/`
+
   return (
     <StyledContainer maxHeight={`${100}%`}>
       <StyledOverflowContainer

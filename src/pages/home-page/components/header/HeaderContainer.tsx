@@ -7,7 +7,7 @@ export const StyledHeaderContainer = styled.div`
     max-height: 110px;
 
     h5 {
-        color: var(--grayscale-black, #000);
+        color: #000;
         /* H5 */
         font-size: 20px;
         font-family: "Inter", sans-serif;
