@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import Button from "../button/Button";
 import TweetInput from "../tweet-input/TweetInput";
 import { useHttpRequestService } from "../../service/HttpRequestService";
@@ -13,7 +13,7 @@ import { StyledContainer } from "../common/Container";
 import { StyledButtonContainer } from "./ButtonContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { User } from "../../service";
+import {useUser} from "../../context/UserContext"
 
 interface TweetBoxProps {
   parentId?: string;
@@ -31,16 +31,16 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, close, mobile, borderless
   const httpService = useHttpRequestService();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const service = useHttpRequestService();
-  const [user, setUser] = useState<User | null>(null);
+  // const service = useHttpRequestService();
+  const { user } = useUser()
 
-  useEffect(() => {
-    handleGetUser().then(setUser);
-  }, []);
-
-  const handleGetUser = async (): Promise<User> => {
-    return await service.me();
-  };
+  // useEffect(() => {
+  //   handleGetUser().then(setUser);
+  // }, []);
+  //
+  // const handleGetUser = async (): Promise<User> => {
+  //   return await service.me();
+  // };
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
       setContent(e.target.value);
