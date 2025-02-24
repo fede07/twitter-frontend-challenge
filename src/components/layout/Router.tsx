@@ -11,6 +11,7 @@ import TweetPage from "../../pages/create-tweet-page/TweetPage";
 import CommentPage from "../../pages/create-comment-page/CommentPage";
 import PostPage from "../../pages/post-page/PostPage";
 import {UserProvider} from "../../context/UserContext"
+import ProtectedRoute from "../../auth/ProtectedRoute"
 
 const WithNav = () => {
   return (
@@ -36,29 +37,34 @@ export const ROUTER = createBrowserRouter([
     element: <WithNav />,
     children: [
       {
-        path: "/",
-        element: <HomePage />,
-      },
-      {
-        path: "/recommendations",
-        element: <RecommendationPage />,
-      },
-      {
-        path: "/profile/:id",
-        element: <ProfilePage />,
-      },
-      {
-        path: "/post/:id",
-        element: <PostPage />,
-      },
-      {
-        path: "/compose/tweet",
-        element: <TweetPage />,
-      },
-      {
-        path: "/post/:id",
-        element: <CommentPage />,
-      },
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "/",
+            element: <HomePage />,
+          },
+          {
+            path: "/recommendations",
+            element: <RecommendationPage />,
+          },
+          {
+            path: "/profile/:id",
+            element: <ProfilePage />,
+          },
+          {
+            path: "/post/:id",
+            element: <PostPage />,
+          },
+          {
+            path: "/compose/tweet",
+            element: <TweetPage />,
+          },
+          {
+            path: "/post/:id",
+            element: <CommentPage />,
+          },
+        ]
+      }
     ],
   },
 ]);

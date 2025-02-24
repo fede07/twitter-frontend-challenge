@@ -1,6 +1,7 @@
 import {User} from "../service"
 import React ,{createContext ,useEffect ,useState} from "react"
 import {useHttpRequestService} from "../service/HttpRequestService"
+import Loader from "../components/loader/Loader"
 
 interface UserContextValue {
   user: User | null
@@ -32,9 +33,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode}> = ({children})
   } ,[]);
 
   return (
-    <UserContext.Provider value={{user, loading, reloadUser: loadUser}}>
-      {children}
-    </UserContext.Provider>
+    <>
+      {loading? (
+        <Loader/>
+      ) : (
+        <UserContext.Provider value={{user, loading, reloadUser: loadUser}}>
+          {children}
+        </UserContext.Provider>
+      )
+      }
+
+    </>
+
   )
 }
 
