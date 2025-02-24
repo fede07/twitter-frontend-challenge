@@ -11,7 +11,6 @@ interface AvatarProps {
 }
 
 const Avatar = ({ src, alt, onClick, width, height }: AvatarProps) => {
-  console.log(src);
   return (
     <StyledAvatarContainer onClick={onClick} width={width} height={height}>
       {src !== undefined ? <img src={src} alt={alt} /> : <NameImage name={alt} />}

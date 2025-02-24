@@ -29,7 +29,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode}> = ({children})
   }
 
   useEffect(() => {
-    loadUser().then()
+    console.log("loading user")
+    loadUser().then(() =>
+      console.log("user loaded"))
   } ,[]);
 
   return (

@@ -23,23 +23,23 @@ const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [tweetModalOpen, setTweetModalOpen] = useState(false);
-  const [logoutOpen, setLogoutOpen] = useState(false);
+  // const [logoutOpen, setLogoutOpen] = useState(false);
   // const service = useHttpRequestService()
   const {user} = useUser()
   const {t} = useTranslation();
 
 
-  const handleAvatarClick = () => {
-    if (window.innerWidth < 1265) {
-      handleLogout();
-    } else {
-      navigate(`/profile/${user?.id}`);
-    }
-  };
+  // const handleAvatarClick = () => {
+  //   if (window.innerWidth < 1265) {
+  //     handleLogout();
+  //   } else {
+  //     navigate(`/profile/${user?.id}`);
+  //   }
+  // };
 
-  const handleLogout = () => {
-    setLogoutOpen(!logoutOpen);
-  };
+  // const handleLogout = () => {
+  //   setLogoutOpen(!logoutOpen);
+  // };
 
   return (
       <StyledNavBarContainer>
@@ -59,7 +59,9 @@ const NavBar = () => {
             />
             <NavItem
                 title={t("navbar.profile")}
-                onClick={() => handleAvatarClick()}
+                onClick={() => {
+                  navigate(`/profile/${user?.id}`)
+                }}
                 icon={IconType.PROFILE}
                 selectedIcon={IconType.ACTIVE_PROFILE}
                 active={location.pathname === `/profile/${user?.id}`}

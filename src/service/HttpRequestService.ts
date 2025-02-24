@@ -74,13 +74,19 @@ const httpRequestService = {
     }
   },
   me: async () => {
-    const res = await axios.get(`${url}/user/me`, {
-      headers: {
-        Authorization: localStorage.getItem("token"),
-      },
-    });
-    if (res.status === 200) {
-      return res.data;
+    try {
+      const res = await axios.get(`${url}/user/me`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
+      if (res.status === 200) {
+        return res.data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
     }
   },
   getPostById: async (id: string) => {
@@ -321,6 +327,7 @@ const httpRequestService = {
       return res.data;
     }
   },
+
   getCommentsByPostId: async (id: string) => {
     const res = await axios.get(`${url}/post/comment/by_post/${id}`, {
       headers: {
