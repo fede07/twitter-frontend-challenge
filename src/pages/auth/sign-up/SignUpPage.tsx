@@ -20,6 +20,7 @@ interface SignUpData {
 const SignUpPage = () => {
   const [data, setData] = useState<Partial<SignUpData>>({});
   const [error, setError] = useState(false);
+  const [errorConflict, setErrorConflict] = useState(false);
 
   const httpRequestService = useHttpRequestService();
   const navigate = useNavigate();
@@ -31,11 +32,20 @@ const SignUpPage = () => {
     };
   const handleSubmit = async () => {
     const { confirmPassword, ...requestData } = data;
-    httpRequestService
-      .signUp(requestData)
-      .then(() => navigate("/"))
-      .catch(() => setError(false));
+    const response = await httpRequestService.signUp(requestData)
+
+    if (response?.success) {
+      navigate("/");
+    } else {
+      setError(true);
+      if(response?.status === 409) {
+        setErrorConflict(true);
+        console.log(response?.status)
+      }
+    }
   };
+
+
 
   return (
     <AuthWrapper>
@@ -84,6 +94,13 @@ const SignUpPage = () => {
               onChange={handleChange("confirmPassword")}
             />
           </div>
+          {errorConflict? (
+            <div>
+              <p className={"error"}>User already exists</p>
+            </div>
+          ) : (
+            <></>
+          )}
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Button
               text={t("buttons.register")}

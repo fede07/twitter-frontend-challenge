@@ -19,15 +19,15 @@ export const StyledNavBarContainer = styled.div`
         border-radius: 32px;
     }
     
-    .profile-info{
-        display: flex;
-        border-radius: 10px;
-        width: fit-content;
-        padding: 0 16px;
-        &:hover{
-            background-color: ${(props) => props.theme.colors.hover};
-        }
-    }
+    // .profile-info{
+    //     display: flex;
+    //     border-radius: 10px;
+    //     width: fit-content;
+    //     padding: 0 16px;
+    //     &:hover{
+    //         background-color: ${(props) => props.theme.colors.hover};
+    //     }
+    // }
     
     @media (max-width: 1265px) {
         display: flex;
@@ -52,8 +52,8 @@ export const StyledNavBarContainer = styled.div`
         padding: 0;
         margin-left: 0;
         
-        .profile-info{
-            display: none;
-        }
+        //.profile-info{
+        //    display: none;
+        //}
     }
 `;

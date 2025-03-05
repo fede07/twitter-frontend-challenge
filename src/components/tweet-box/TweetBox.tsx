@@ -1,7 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import Button from "../button/Button";
 import TweetInput from "../tweet-input/TweetInput";
-import { useHttpRequestService } from "../../service/HttpRequestService";
 import { setLength, updateFeed } from "../../redux/user";
 import ImageContainer from "../tweet/tweet-image/ImageContainer";
 import { BackArrowIcon } from "../icon/Icon";
@@ -14,6 +13,7 @@ import { StyledButtonContainer } from "./ButtonContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import {useUser} from "../../context/UserContext"
+import {UseGetPosts} from "../../queries/postQueries"
 
 interface TweetBoxProps {
   parentId?: string;
@@ -28,11 +28,13 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, close, mobile, borderless
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
 
   const { length, query } = useSelector((state: RootState) => state.user);
-  const httpService = useHttpRequestService();
+  // const httpService = useHttpRequestService();
   const dispatch = useDispatch();
   const { t } = useTranslation();
   // const service = useHttpRequestService();
   const { user } = useUser()
+
+  const { refetch } = UseGetPosts(query);
 
   // useEffect(() => {
   //   handleGetUser().then(setUser);
@@ -52,7 +54,7 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, close, mobile, borderless
       setImages([]);
       setImagesPreview([]);
       dispatch(setLength(length + 1));
-      const posts = await httpService.getPosts(query);
+      const { data: posts } = await refetch();
       dispatch(updateFeed(posts));
       close && close();
     } catch (e) {

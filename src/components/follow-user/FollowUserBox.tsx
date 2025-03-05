@@ -28,7 +28,6 @@ const FollowUserBox = ({
   useEffect(() => {
     handleGetUser().then(r => {
       if (!r) return;
-      console.log(r)
       setIsFollowing(r?.following?.some((f: Author) => f.id === id))
     })
   }, []);

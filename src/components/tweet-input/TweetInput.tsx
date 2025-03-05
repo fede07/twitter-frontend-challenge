@@ -1,6 +1,5 @@
 import React, { ChangeEventHandler } from "react";
 import Avatar from "../common/avatar/Avatar";
-import Icon from "../../assets/icon.jpg";
 import { StyledTweetInputContainer } from "./TweetInputContainer";
 import { StyledBorderlessTextArea } from "./BorderlessTextArea";
 
@@ -22,7 +21,7 @@ const TweetInput = ({
 }: TweetInputProps) => {
   return (
     <StyledTweetInputContainer>
-      <Avatar src={src ?? Icon} alt={alt ?? "Icon"} />
+      <Avatar src={src} alt={alt} />
       <StyledBorderlessTextArea
         onChange={onChange}
         maxLength={maxLength}

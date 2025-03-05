@@ -12,12 +12,17 @@ export const SearchResultModal = ({
   show,
   results,
 }: SearchResultModalProps) => {
+
+  if(results === undefined) {
+    return <></>
+  }
+
   return (
     <>
       {show && (
         <StyledContainer style={{ width: "100%" }}>
           <StyledSearchResultModalContainer>
-            {(results.length === 0 && <div>No results</div>) ||
+            {((results.length === 0) && <div>No results</div>) ||
               results.map((author) => {
                 return (
                   <UserDataBox

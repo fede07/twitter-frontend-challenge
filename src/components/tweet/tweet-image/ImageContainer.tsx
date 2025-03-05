@@ -4,6 +4,7 @@ import {
   StyledContainer,
   StyledOverflowContainer,
 } from "../../common/Container";
+import {S3Service} from "../../../service/S3Service"
 
 interface ImageContainerProps {
   images: string[];
@@ -16,14 +17,19 @@ const ImageContainer = ({
   removeFunction,
 }: ImageContainerProps) => {
 
+
+  const s3Service = S3Service
+
+  const publicUrls = images.map(image => s3Service.getPublicUrl(image))
+
   return (
-    <StyledContainer maxWidth={"100%"} alignItems={"flex-end"} gap={"8px"}>
+    <StyledContainer maxWidth={"100%"} alignItems={"flex-end"} gap={"8px"} >
       <StyledOverflowContainer
         flexDirection={"row"}
         gap={"8px"}
         maxHeight={"460px"}
       >
-        {images.slice(0, 2).map((image, index) => (
+        {publicUrls.slice(0, 2).map((image, index) => (
           <TweetImage
             key={image}
             src={image}

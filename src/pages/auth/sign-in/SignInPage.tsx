@@ -8,6 +8,7 @@ import LabeledInput from "../../../components/labeled-input/LabeledInput";
 import Button from "../../../components/button/Button";
 import { ButtonType } from "../../../components/button/StyledButton";
 import { StyledH3 } from "../../../components/common/text";
+import {useQueryClient} from "@tanstack/react-query"
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
@@ -18,7 +19,10 @@ const SignInPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const queryClient = useQueryClient()
+
   const handleSubmit = () => {
+    queryClient.clear()
     httpRequestService
       .signIn({ email, password })
       .then(() => navigate("/"))

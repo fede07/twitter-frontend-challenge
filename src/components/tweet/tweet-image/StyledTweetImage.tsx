@@ -5,4 +5,5 @@ export const StyledTweetImage = styled.img`
   height: 100%;
   transform-origin: center center;
   object-fit: cover;
+    border-radius: 16px;
 `;

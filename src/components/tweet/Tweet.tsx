@@ -12,6 +12,7 @@ import DeletePostModal from "./delete-post-modal/DeletePostModal";
 import ImageContainer from "./tweet-image/ImageContainer";
 import CommentModal from "../comment/comment-modal/CommentModal";
 import {useNavigate} from "react-router-dom";
+import {UseGetPostById} from "../../queries/postQueries"
 
 interface TweetProps {
   post: Post;
@@ -44,7 +45,8 @@ const Tweet = ({post, user}: TweetProps) => {
     } else {
       await service.createReaction(actualPost.id, type);
     }
-    const newPost = await service.getPostById(post.id);
+    // const newPost = await service.getPostById(post.id);
+    const newPost = UseGetPostById(post.id).data;
     setActualPost(newPost);
   };
 
@@ -70,7 +72,7 @@ const Tweet = ({post, user}: TweetProps) => {
         >
           <AuthorData
               id={post.author.id}
-              name={post.author.name ?? "Name"}
+              name={post.author.name ?? post.author.username}
               username={post.author.username}
               createdAt={post.createdAt}
               profilePicture={post.author.profilePicture}

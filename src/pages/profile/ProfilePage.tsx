@@ -1,56 +1,70 @@
-import React, {useEffect, useState} from "react";
-import ProfileInfo from "./ProfileInfo";
-import {useNavigate, useParams} from "react-router-dom";
-import Modal from "../../components/modal/Modal";
-import {useTranslation} from "react-i18next";
-import {User} from "../../service";
-import {ButtonType} from "../../components/button/StyledButton";
-import {useHttpRequestService} from "../../service/HttpRequestService";
-import Button from "../../components/button/Button";
-import ProfileFeed from "../../components/feed/ProfileFeed";
-import {StyledContainer} from "../../components/common/Container";
-import {StyledH5} from "../../components/common/text";
+import React, { useEffect, useState } from 'react';
+import ProfileInfo from './ProfileInfo';
+import { useNavigate, useParams } from 'react-router-dom';
+import Modal from '../../components/modal/Modal';
+import { useTranslation } from 'react-i18next';
+import { User } from '../../service';
+import { ButtonType } from '../../components/button/StyledButton';
+import { useHttpRequestService } from '../../service/HttpRequestService';
+import Button from '../../components/button/Button';
+import ProfileFeed from '../../components/feed/ProfileFeed';
+import { StyledContainer } from '../../components/common/Container';
+import { StyledH5 } from '../../components/common/text';
+import { UseGetPostsFromProfile } from '../../queries/postQueries';
+import { UseGetProfile, UseGetProfileView } from '../../queries/userQueries';
+import Loader from "../../components/loader/Loader"
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState<User | null>(null);
   const [following, setFollowing] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalValues, setModalValues] = useState({
-    text: "",
-    title: "",
+    text: '',
+    title: '',
     type: ButtonType.DEFAULT,
-    buttonText: "",
+    buttonText: '',
   });
-  const service = useHttpRequestService()
-  const [user, setUser] = useState<User>()
+  const service = useHttpRequestService();
+  const [user, setUser] = useState<User>();
 
   const id = useParams().id;
   const navigate = useNavigate();
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
+  const {
+    data: profilePosts,
+    refetch: refetchGetPostsFromProfile,
+    isLoading: isLoadingPostsFromProfile,
+  } = UseGetPostsFromProfile(id!, !!id);
+  const {
+    data: profileView,
+    refetch: refetchUserProfileView,
+  } = UseGetProfileView(id!, !!id);
+  const { data: userCache } = UseGetProfile();
 
   useEffect(() => {
-    handleGetUser().then(r => setUser(r))
+    handleGetUser().then((r) => setUser(r));
   }, []);
 
   const handleGetUser = async () => {
-    return await service.me()
-  }
+    if (userCache) return userCache;
+    return await service.me();
+  };
 
   const handleButtonType = (): { component: ButtonType; text: string } => {
     if (profile?.id === user?.id)
-      return {component: ButtonType.DELETE, text: t("buttons.delete")};
+      return { component: ButtonType.DELETE, text: t('buttons.delete') };
     if (following)
-      return {component: ButtonType.OUTLINED, text: t("buttons.unfollow")};
-    else return {component: ButtonType.FOLLOW, text: t("buttons.follow")};
+      return { component: ButtonType.OUTLINED, text: t('buttons.unfollow') };
+    else return { component: ButtonType.FOLLOW, text: t('buttons.follow') };
   };
 
   const handleSubmit = () => {
     if (profile?.id === user?.id) {
       service.deleteProfile().then(() => {
-        localStorage.removeItem("token");
-        navigate("/sign-in");
+        localStorage.removeItem('token');
+        navigate('/sign-in');
       });
     } else {
       service.unfollowUser(profile!.id).then(async () => {
@@ -62,8 +76,10 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    getProfileData().then();
-  }, [id]);
+    if (profilePosts && !isLoadingPostsFromProfile) {
+      getProfileData().then();
+    }
+  }, [id, profilePosts, isLoadingPostsFromProfile]);
 
   if (!id) return null;
 
@@ -71,19 +87,19 @@ const ProfilePage = () => {
     if (profile?.id === user?.id) {
       setShowModal(true);
       setModalValues({
-        title: t("modal-title.delete-account"),
-        text: t("modal-content.delete-account"),
+        title: t('modal-title.delete-account'),
+        text: t('modal-content.delete-account'),
         type: ButtonType.DELETE,
-        buttonText: t("buttons.delete"),
+        buttonText: t('buttons.delete'),
       });
     } else {
       if (following) {
         setShowModal(true);
         setModalValues({
-          text: t("modal-content.unfollow"),
-          title: `${t("modal-title.unfollow")} @${profile?.username}?`,
+          text: t('modal-content.unfollow'),
+          title: `${t('modal-title.unfollow')} @${profile?.username}?`,
           type: ButtonType.FOLLOW,
-          buttonText: t("buttons.unfollow"),
+          buttonText: t('buttons.unfollow'),
         });
       } else {
         await service.followUser(id);
@@ -94,88 +110,103 @@ const ProfilePage = () => {
   };
 
   const getProfileData = async () => {
-    service
-        .getProfile(id)
-        .then((res) => {
-          setProfile(res);
-          setFollowing(
-              res
-                  ? res?.followers.some((follower: User) => follower.id === user?.id)
-                  : false
-          );
-        })
-        .catch(() => {
-          service
-              .getProfileView(id)
-              .then((res) => {
-                setProfile(res);
-                setFollowing(false);
-              })
-              .catch((error2) => {
-                console.log(error2);
-              });
-        });
-  };
+    try {
+      console.log ("Id: ", id)
+      console.log("profilePosts: ", profilePosts);
+      if (!profilePosts) {
+        console.log("profilePosts not loaded!")
+        await refetchGetPostsFromProfile();
+      }
+      if (profilePosts && !isLoadingPostsFromProfile) {
+        console.log("profilePosts loaded!")
+        setProfile(profilePosts);
+        setFollowing(
+          profilePosts
+            ? profilePosts?.followers.some(
+              (follower: User) => follower.id === user?.id
+            )
+            : false
+        )
+      }
+    } catch (e) {
+      console.log("profileView:", profileView);
+      try {
+        if (!profileView) {
+          await refetchUserProfileView();
+        }
+        if (profileView){
+          setProfile(profileView);
+          setFollowing(false);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  if (isLoadingPostsFromProfile) {
+    return <Loader/>
+  }
 
   return (
-      <>
-        <StyledContainer
-            maxHeight={"100vh"}
-            borderRight={"1px solid #ebeef0"}
-            maxWidth={'600px'}
-        >
-          {profile && (
-              <>
-                <StyledContainer
-                    borderBottom={"1px solid #ebeef0"}
-                    maxHeight={"212px"}
-                    padding={"16px"}
-                >
-                  <StyledContainer
-                      alignItems={"center"}
-                      padding={"24px 0 0 0"}
-                      flexDirection={"row"}
-                  >
-                    <ProfileInfo
-                        name={profile!.name!}
-                        username={profile!.username}
-                        profilePicture={profile!.profilePicture}
-                    />
-                    <Button
-                        buttonType={handleButtonType().component}
-                        size={"100px"}
-                        onClick={handleButtonAction}
-                        text={handleButtonType().text}
-                    />
-                  </StyledContainer>
-                </StyledContainer>
-                <StyledContainer width={"100%"}>
-                  {profile.followers ? (
-                      <ProfileFeed/>
-                  ) : (
-                      <StyledH5>Private account</StyledH5>
-                  )}
-                </StyledContainer>
-                <Modal
-                    show={showModal}
-                    text={modalValues.text}
-                    title={modalValues.title}
-                    acceptButton={
-                      <Button
-                          buttonType={modalValues.type}
-                          text={modalValues.buttonText}
-                          size={"MEDIUM"}
-                          onClick={handleSubmit}
-                      />
-                    }
-                    onClose={() => {
-                      setShowModal(false);
-                    }}
+    <>
+      <StyledContainer
+        maxHeight={'100vh'}
+        borderRight={'1px solid #ebeef0'}
+        maxWidth={'600px'}
+      >
+        {profile && (
+          <>
+            <StyledContainer
+              borderBottom={'1px solid #ebeef0'}
+              maxHeight={'212px'}
+              padding={'16px'}
+            >
+              <StyledContainer
+                alignItems={'center'}
+                padding={'24px 0 0 0'}
+                flexDirection={'row'}
+              >
+                <ProfileInfo
+                  name={profile!.name!}
+                  username={profile!.username}
+                  profilePicture={profile!.profilePicture}
                 />
-              </>
-          )}
-        </StyledContainer>
-      </>
+                <Button
+                  buttonType={handleButtonType().component}
+                  size={'100px'}
+                  onClick={handleButtonAction}
+                  text={handleButtonType().text}
+                />
+              </StyledContainer>
+            </StyledContainer>
+            <StyledContainer width={'100%'}>
+              {!profile.isPrivate ? (
+                <ProfileFeed />
+              ) : (
+                <StyledH5>Private account</StyledH5>
+              )}
+            </StyledContainer>
+            <Modal
+              show={showModal}
+              text={modalValues.text}
+              title={modalValues.title}
+              acceptButton={
+                <Button
+                  buttonType={modalValues.type}
+                  text={modalValues.buttonText}
+                  size={'MEDIUM'}
+                  onClick={handleSubmit}
+                />
+              }
+              onClose={() => {
+                setShowModal(false);
+              }}
+            />
+          </>
+        )}
+      </StyledContainer>
+    </>
   );
 };
 

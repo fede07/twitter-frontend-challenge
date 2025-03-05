@@ -43,7 +43,7 @@ export interface Author {
   name?: string;
   username: string;
   profilePicture?: string;
-  private: boolean;
+  isPrivate: boolean;
   createdAt: Date;
 }
 
@@ -52,7 +52,7 @@ export interface User {
   name?: string;
   username: string;
   profilePicture?: string;
-  private: boolean;
+  isPrivate: boolean;
   createdAt: Date;
   followers: Author[];
   following: Author[];

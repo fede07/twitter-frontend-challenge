@@ -20,10 +20,10 @@ const ProfileInfo = ({
         src={profilePicture === null ? Icon : profilePicture!}
         width={"133px"}
         height={"133px"}
-        alt={name ?? "Name"}
+        alt={name ?? username}
       />
       <StyledContainer justifyContent={"center"}>
-        <StyledH5>{name ?? "Name"}</StyledH5>
+        <StyledH5>{name ?? username}</StyledH5>
         <StyledP primary={false}>{`@${username}`}</StyledP>
         <StyledP primary={false}>Description...</StyledP>
       </StyledContainer>
