@@ -7,6 +7,7 @@ import {ButtonType} from "../button/StyledButton";
 import "./FollowUserBox.css";
 import {Author} from "../../service";
 import {useUser} from "../../context/UserContext"
+import {StyledFollowUserBox} from "./StyledFollowUserBox"
 
 interface FollowUserBoxProps {
   profilePicture?: string;
@@ -48,7 +49,7 @@ const FollowUserBox = ({
   };
 
   return (
-      <div className="box-container">
+      <StyledFollowUserBox>
         <UserDataBox
             id={id}
             name={name!}
@@ -61,7 +62,7 @@ const FollowUserBox = ({
             size={"SMALL"}
             onClick={handleFollow}
         />
-      </div>
+      </StyledFollowUserBox>
   );
 };
 
