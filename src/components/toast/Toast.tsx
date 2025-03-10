@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { StyledToastContainer } from "./ToastContainer";
-import { AlertIcon } from "../icon/Icon";
+import React, { useState } from 'react';
+import { StyledToastContainer } from './ToastContainer';
+import { AlertIcon } from '../icon/Icon';
+import { LightTheme } from '../../util/LightTheme';
 
 export enum ToastType {
-  ALERT = "ALERT",
+  ALERT = 'ALERT',
+  SUCCESS = 'SUCCESS',
 }
 
 interface ToastProps {
@@ -17,6 +19,7 @@ const Toast = ({ message, type, show }: ToastProps) => {
 
   const iconMap = {
     [ToastType.ALERT]: <AlertIcon />,
+    [ToastType.SUCCESS]: null,
   };
 
   const toastIcon = iconMap[type] || null;
@@ -24,7 +27,11 @@ const Toast = ({ message, type, show }: ToastProps) => {
   return (
     <>
       {isShown && (
-        <StyledToastContainer type={type} onClick={() => setIsShown(false)}>
+        <StyledToastContainer
+          type={type}
+          theme={LightTheme}
+          onClick={() => setIsShown(false)}
+        >
           {toastIcon}
           <p>{message}</p>
         </StyledToastContainer>

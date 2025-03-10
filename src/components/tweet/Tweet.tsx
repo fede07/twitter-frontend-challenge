@@ -27,9 +27,9 @@ const Tweet = ({post, user}: TweetProps) => {
   const navigate = useNavigate();
 
 
-  const getCountByType = (type: string): number => {
-    return actualPost?.reactions?.filter((r) => r.type === type).length ?? 0;
-  };
+  // const getCountByType = (type: string): number => {
+  //   return actualPost?.reactions?.filter((r) => r.type === type).length ?? 0;
+  // };
 
   const handleReaction = async (type: string) => {
 
@@ -105,7 +105,7 @@ const Tweet = ({post, user}: TweetProps) => {
         <StyledReactionsContainer>
           <Reaction
               img={IconType.CHAT}
-              count={actualPost?.comments?.length}
+              count={actualPost?.qtyComments ?? 0}
               reactionFunction={() =>
                   window.innerWidth > 600
                       ? setShowCommentModal(true)
@@ -116,14 +116,14 @@ const Tweet = ({post, user}: TweetProps) => {
           />
           <Reaction
               img={IconType.RETWEET}
-              count={getCountByType("RETWEET")}
+              count={actualPost?.qtyReactions ?? 0}
               reactionFunction={() => handleReaction("RETWEET")}
               increment={1}
               reacted={hasReactedByType("RETWEET")}
           />
           <Reaction
               img={IconType.LIKE}
-              count={getCountByType("LIKE")}
+              count={actualPost?.qtyLikes ?? 0}
               reactionFunction={() => handleReaction("LIKE")}
               increment={1}
               reacted={hasReactedByType("LIKE")}

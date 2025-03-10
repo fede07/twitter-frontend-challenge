@@ -174,7 +174,7 @@ const httpRequestService = {
   },
 
   getProfileView: async (id: string) => {
-    const res = await axios.get(`${url}/user/${id}`);
+    const res = await apiClient.get(`${url}/user/${id}`);
     if (res.status === 200) {
       return res.data;
     }

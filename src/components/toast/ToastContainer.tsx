@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { ToastType } from "./Toast";
-import { Theme } from "../../util/LightTheme";
+import styled from 'styled-components';
+import { ToastType } from './Toast';
+import { Theme } from '../../util/LightTheme';
 
 interface ToastContainerProps {
   type: ToastType;
@@ -19,6 +19,8 @@ export const StyledToastContainer = styled.div`
       switch (props.type) {
         case ToastType.ALERT:
           return props.theme.colors.errorContainer;
+        case ToastType.SUCCESS:
+          return props.theme.colors.successContainer;
         default:
           return props.theme.colors.errorContainer;
       }
