@@ -8,6 +8,7 @@ import icon from "../../assets/icon.jpg";
 import {StyledP} from "../common/text";
 import {StyledContainer} from "../common/Container";
 import {useUser} from "../../context/UserContext"
+import ModalWrapper from "../modal-wrapper/ModalWrapper"
 
 
 interface ProfileLogoutPromptProps {
@@ -36,9 +37,15 @@ const ProfileLogoutPrompt = ({margin, direction}: ProfileLogoutPromptProps) => {
         event.stopPropagation();
     };
 
+    const onClose = () => {
+        setLogoutOpen(false);
+    }
+
 
     return (
-        <StyledContainer
+
+      <ModalWrapper show={true} onClose={onClose}>
+          <StyledContainer
             maxHeight={"48px"}
             flexDirection={"row"}
             className={'profile-info'}
@@ -46,20 +53,22 @@ const ProfileLogoutPrompt = ({margin, direction}: ProfileLogoutPromptProps) => {
             gap={'8px'}
             onClick={handleLogout}
             cursor={'pointer'}
-        >
-            <StyledProfileLogoutPromptContainer direction={direction}>
-                <img src={user?.profilePicture ?? icon} className="icon" alt="Icon"/>
-                {logoutOpen &&
+          >
+              <StyledProfileLogoutPromptContainer direction={direction}>
+                  <img src={user?.profilePicture ?? icon} className="icon" alt="Icon"/>
+                  {logoutOpen &&
                     <StyledLogoutPrompt margin={margin} onClick={(event) => handleButtonClick(event)}>
                         <LogoutPrompt show={logoutOpen}/>
                     </StyledLogoutPrompt>
-                }
-            </StyledProfileLogoutPromptContainer>
-            <StyledContainer padding={"4px 0"} gap={"4px"} className={'user-info'}>
-                <StyledP primary>{user?.name}</StyledP>
-                <StyledP primary={false}>{`@${user?.username}`}</StyledP>
-            </StyledContainer>
-        </StyledContainer>
+                  }
+              </StyledProfileLogoutPromptContainer>
+              <StyledContainer padding={"4px 0"} gap={"4px"} className={'user-info'}>
+                  <StyledP primary>{user?.name}</StyledP>
+                  <StyledP primary={false}>{`@${user?.username}`}</StyledP>
+              </StyledContainer>
+          </StyledContainer>
+      </ModalWrapper>
+
     )
 }
 

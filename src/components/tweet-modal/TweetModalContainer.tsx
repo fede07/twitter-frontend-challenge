@@ -16,13 +16,13 @@ export const StyledTweetModalContainer = styled.div`
   flex-shrink: 0;
   border-radius: 16px;
 
-  p {
-    margin: 0;
-  }
-
-  @media (max-width: 1265px) {
-    button {
-      display: flex;
+    p {
+        margin: 0;
     }
-  }
+
+    @media (max-width: 1265px) {
+        button {
+            display: flex;
+        }
+    }
 `;
