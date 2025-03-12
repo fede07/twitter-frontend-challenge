@@ -250,8 +250,8 @@ const httpRequestService = {
 const useHttpRequestService = () => httpRequestService;
 
 // For class component (remove when unused)
-class HttpService {
-  service = httpRequestService;
-}
+// class HttpService {
+//   service = httpRequestService;
+// }
 
-export { useHttpRequestService, HttpService };
+export { useHttpRequestService };

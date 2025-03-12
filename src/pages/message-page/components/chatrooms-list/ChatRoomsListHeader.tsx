@@ -7,5 +7,4 @@ export const StyledChatRoomsListHeader = styled.div`
     font-weight: 600;
     font-family: "Manrope",serif;
 
-
 `

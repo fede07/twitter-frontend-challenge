@@ -10,9 +10,9 @@ interface TweetModalProps {
 export const TweetModal = ({ open, onClose }: TweetModalProps) => {
   return (
     <>
-      <PostModal show={open} onClose={onClose}>
-        <TweetBox borderless close={onClose} />
-      </PostModal>
+        <PostModal show={open} onClose={onClose}>
+          <TweetBox borderless onClose={onClose} />
+        </PostModal>
     </>
   );
 };
