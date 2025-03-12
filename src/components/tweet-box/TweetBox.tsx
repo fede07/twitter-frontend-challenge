@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import {useUser} from "../../context/UserContext"
 import {UseGetPosts} from "../../queries/postQueries"
+import {useHttpRequestService} from "../../service/HttpRequestService"
 
 interface TweetBoxProps {
   parentId?: string;
@@ -28,10 +29,9 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, close, mobile, borderless
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
 
   const { length, query } = useSelector((state: RootState) => state.user);
-  // const httpService = useHttpRequestService();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  // const service = useHttpRequestService();
+  const service = useHttpRequestService();
   const { user } = useUser()
 
   const { refetch } = UseGetPosts(query);
@@ -50,6 +50,7 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, close, mobile, borderless
 
   const handleSubmit = async () => {
     try {
+      await service.createPost({content, images, parentId: parentId ? parentId : undefined})
       setContent("");
       setImages([]);
       setImagesPreview([]);

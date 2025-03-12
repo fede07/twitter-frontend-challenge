@@ -1,0 +1,17 @@
+import {io} from "socket.io-client"
+
+const URL = "http://localhost:8080";
+
+const token = localStorage.getItem("token")
+
+console.log("TOKEN: ", token)
+
+export const socket = io(URL, {
+  autoConnect: false,
+  auth: {
+    token: `${token}`
+  },
+  headers: {
+    Authorization: `${token}`
+  }
+});

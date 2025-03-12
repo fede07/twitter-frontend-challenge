@@ -12,6 +12,7 @@ import CommentPage from "../../pages/create-comment-page/CommentPage";
 import PostPage from "../../pages/post-page/PostPage";
 import {UserProvider} from "../../context/UserContext"
 import ProtectedRoute from "../../auth/ProtectedRoute"
+import MessagePage from "../../pages/message-page/MessagePage"
 
 const WithNav = () => {
   return (
@@ -46,6 +47,10 @@ export const ROUTER = createBrowserRouter([
           {
             path: "/recommendations",
             element: <RecommendationPage />,
+          },
+          {
+            path: "/messages",
+            element: <MessagePage />
           },
           {
             path: "/profile/:id",

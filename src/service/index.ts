@@ -76,3 +76,12 @@ export interface ChatDTO {
   users: Author[];
   messages: MessageDTO[];
 }
+
+export interface Chatroom {
+  id: string;
+  roomId: string;
+  participants: string[];
+  updatedAt: string;
+  createdAt: string;
+}
+
