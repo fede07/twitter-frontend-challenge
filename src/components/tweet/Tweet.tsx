@@ -13,6 +13,7 @@ import ImageContainer from "./tweet-image/ImageContainer";
 import CommentModal from "../comment/comment-modal/CommentModal";
 import {useNavigate} from "react-router-dom";
 import {UseGetPostById} from "../../queries/postQueries"
+import { S3Service } from "../../service/S3Service"
 
 interface TweetProps {
   post: Post;
@@ -25,11 +26,12 @@ const Tweet = ({post, user}: TweetProps) => {
   const [showCommentModal, setShowCommentModal] = useState<boolean>(false);
   const service = useHttpRequestService();
   const navigate = useNavigate();
-
-
+  const s3 = S3Service
   // const getCountByType = (type: string): number => {
   //   return actualPost?.reactions?.filter((r) => r.type === type).length ?? 0;
   // };
+
+  const imagesUrls = post.images?.length ? post.images?.map((image: string) => s3.getPublicUrl(image)) : []
 
   const handleReaction = async (type: string) => {
 
@@ -75,7 +77,7 @@ const Tweet = ({post, user}: TweetProps) => {
               name={post.author.name ?? post.author.username}
               username={post.author.username}
               createdAt={post.createdAt}
-              profilePicture={post.author.profilePicture}
+              profilePicture={post.author.profilePicture ? post.author.profilePicture : undefined}
           />
           {post.authorId === user?.id && (
               <>
@@ -99,7 +101,7 @@ const Tweet = ({post, user}: TweetProps) => {
         </StyledContainer>
         {post.images && post.images!.length > 0 && (
             <StyledContainer padding={"0 0 0 10%"}>
-              <ImageContainer images={post.images}/>
+              <ImageContainer images={imagesUrls}/>
             </StyledContainer>
         )}
         <StyledReactionsContainer>

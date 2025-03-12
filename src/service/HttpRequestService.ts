@@ -33,12 +33,16 @@ const httpRequestService = {
     }
   },
   createPost: async (data: PostData) => {
-    const res = await apiClient.post(`${url}/post`, data);
+    const payload = {
+      content: data.content,
+      parentId: data.parentId,
+      images: data.images?.map((image) => image.name),
+    }
+    const res = await apiClient.post(`${url}/post`, payload);
     if (res.status === 201) {
       const { upload } = S3Service;
-      for (const imageUrl of res.data.images) {
-        const index: number = res.data.images.indexOf(imageUrl);
-        await upload(data.images![index], imageUrl);
+      for (const [index, image] of res.data.images.entries()) {
+        await upload(data.images![index], image.url);
       }
       return res.data;
     }

@@ -1,29 +1,31 @@
-import React, { useState, ChangeEvent } from "react";
-import Button from "../button/Button";
-import TweetInput from "../tweet-input/TweetInput";
-import { setLength, updateFeed } from "../../redux/user";
-import ImageContainer from "../tweet/tweet-image/ImageContainer";
-import { BackArrowIcon } from "../icon/Icon";
-import ImageInput from "../common/ImageInput";
-import { useTranslation } from "react-i18next";
-import { ButtonType } from "../button/StyledButton";
-import { StyledTweetBoxContainer } from "./TweetBoxContainer";
-import { StyledContainer } from "../common/Container";
-import { StyledButtonContainer } from "./ButtonContainer";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import {useUser} from "../../context/UserContext"
-import {UseGetPosts} from "../../queries/postQueries"
-import {useHttpRequestService} from "../../service/HttpRequestService"
+import React, { ChangeEvent, useState } from 'react';
+import Button from '../button/Button';
+import TweetInput from '../tweet-input/TweetInput';
+import { setLength, updateFeed } from '../../redux/user';
+import ImageContainer from '../tweet/tweet-image/ImageContainer';
+import { BackArrowIcon } from '../icon/Icon';
+import ImageInput from '../common/ImageInput';
+import { useTranslation } from 'react-i18next';
+import { ButtonType } from '../button/StyledButton';
+import { StyledTweetBoxContainer } from './TweetBoxContainer';
+import { StyledContainer } from '../common/Container';
+import { StyledButtonContainer } from './ButtonContainer';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { useUser } from '../../context/UserContext';
+import { UseGetPosts } from '../../queries/postQueries';
+import { useHttpRequestService } from '../../service/HttpRequestService';
+import { useToast } from '../../context/ToastContext';
+import { ToastType } from '../toast/Toast';
 
 interface TweetBoxProps {
   parentId?: string;
-  close?: () => void;
+  onClose?: () => void;
   mobile?: boolean;
   borderless?: boolean;
 }
 
-const TweetBox: React.FC<TweetBoxProps> = ({ parentId, close, mobile, borderless }) => {
+const TweetBox: React.FC<TweetBoxProps> = ({ parentId, onClose, mobile, borderless }) => {
   const [content, setContent] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
@@ -33,6 +35,7 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, close, mobile, borderless
   const { t } = useTranslation();
   const service = useHttpRequestService();
   const { user } = useUser()
+  const { showToast } = useToast()
 
   const { refetch } = UseGetPosts(query);
 
@@ -49,6 +52,7 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, close, mobile, borderless
   };
 
   const handleSubmit = async () => {
+
     try {
       await service.createPost({content, images, parentId: parentId ? parentId : undefined})
       setContent("");
@@ -57,9 +61,10 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, close, mobile, borderless
       dispatch(setLength(length + 1));
       const { data: posts } = await refetch();
       dispatch(updateFeed(posts));
-      close && close();
+      onClose && onClose();
+      showToast("Tweet created!", ToastType.SUCCESS)
     } catch (e) {
-      console.error(e);
+      showToast(e instanceof Error ? e.message : "An unexpected error occurred", ToastType.ALERT)
     }
   };
 
@@ -84,7 +89,7 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, close, mobile, borderless
           justifyContent="space-between"
           alignItems="center"
         >
-          <BackArrowIcon onClick={close} />
+          <BackArrowIcon onClick={onClose} />
           <Button
             text="Tweet"
             buttonType={ButtonType.DEFAULT}

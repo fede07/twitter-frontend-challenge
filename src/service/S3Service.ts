@@ -6,7 +6,7 @@ export const S3Service = {
 
     await axios.put(url, blob, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": file.type,
       },
     });
   },
@@ -16,5 +16,5 @@ export const S3Service = {
     const region = process.env.REACT_APP_REGION
 
     return `https://${bucketName ?? ''}.s3.${region ?? ''}.amazonaws.com/${key}`
-  }
+  },
 };
