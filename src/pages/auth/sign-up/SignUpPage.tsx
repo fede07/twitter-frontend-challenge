@@ -10,6 +10,8 @@ import { ButtonType } from '../../../components/button/StyledButton';
 import { StyledH3 } from '../../../components/common/text';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import {ToastType} from "../../../components/toast/Toast"
+import {useToast} from "../../../context/ToastContext"
 
 interface SignUpData {
   name: string;
@@ -22,6 +24,7 @@ const SignUpPage = () => {
   // const [data, setData] = useState<Partial<SignUpData>>({});
   // const [error, setError] = useState(false);
   const [errorConflict, setErrorConflict] = useState(false);
+  const { showToast } = useToast();
 
   const httpRequestService = useHttpRequestService();
   const navigate = useNavigate();
@@ -73,7 +76,6 @@ const SignUpPage = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       const { confirmPassword, ...requestData } = values;
-      console.log(values);
       try {
         const response = await httpRequestService.signUp(requestData);
         if (response?.success) {
@@ -84,7 +86,11 @@ const SignUpPage = () => {
           }
         }
       } catch (e) {
-        console.log(e);
+        if (e instanceof Error) {
+          showToast(e.message, ToastType.ALERT);
+        } else {
+          showToast('An unknown error occurred', ToastType.ALERT);
+        }
       }
     },
   });

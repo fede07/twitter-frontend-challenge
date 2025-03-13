@@ -11,4 +11,9 @@ export const StyledUserDataBoxContainer = styled.div`
     cursor: pointer;
     transition: 0.3s ease-in-out;
     box-sizing: border-box;
+    
+    img {
+        min-width: 48px;
+        min-height: 48px;
+    }
 `

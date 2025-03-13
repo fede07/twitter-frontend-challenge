@@ -37,7 +37,6 @@ const LogoutPrompt = ({ show }: LogoutPromptProps) => {
     setShowModal(true);
   };
 
-
   const handleLanguageChange = () => {
     if (i18n.language === "es") {
       i18n.changeLanguage("en");
@@ -79,21 +78,24 @@ const LogoutPrompt = ({ show }: LogoutPromptProps) => {
           </StyledContainer>
         </StyledPromptContainer>
       )}
-      <Modal
-        show={showModal}
-        text={t("modal-content.logout")}
-        img={logo}
-        title={t("modal-title.logout")}
-        acceptButton={
-          <Button
-            buttonType={ButtonType.FOLLOW}
-            text={t("buttons.logout")}
-            size={"MEDIUM"}
-            onClick={handleLogout}
-          />
-        }
-        onClose={() => setShowModal(false)}
-      />
+      {/*<ModalWrapper show={showModal} onClose={() => setShowModal(false)}>*/}
+        <Modal
+          show={showModal}
+          text={t("modal-content.logout")}
+          img={logo}
+          title={t("modal-title.logout")}
+          acceptButton={
+            <Button
+              buttonType={ButtonType.FOLLOW}
+              text={t("buttons.logout")}
+              size={"MEDIUM"}
+              onClick={handleLogout}
+            />
+          }
+          onClose={() => setShowModal(false)}
+        />
+      {/*</ModalWrapper>*/}
+
     </>
   );
 };
