@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { updateFeed } from "../redux/user";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { UseGetPostsFromProfile} from "../queries/postQueries"
+import {UseGetInfinitePostsFromProfile } from "../queries/postQueries"
 
 export const useGetProfilePosts = () => {
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,8 @@ export const useGetProfilePosts = () => {
   const id = useParams().id;
   // const service = useHttpRequestService();
 
-  const { data } = UseGetPostsFromProfile(id!, !!id)
+  // const { data } = UseGetPostsFromProfile(id!, !!id)
+  const { data, fetchNextPage, isFetchingNextPage, isLoading, hasNextPage, isError, error: errorFetch } = UseGetInfinitePostsFromProfile(id!, 10, id!, !!id)
 
   useEffect(() => {
     if (!id) return;
@@ -20,9 +21,10 @@ export const useGetProfilePosts = () => {
     setError(false);
     try{
       if (data) {
-        const updatedPosts = Array.from(new Set([...posts, ...(data || [])])).filter(
-          (post) => post.authorId === id
-        );
+        // const updatedPosts = Array.from(new Set([...posts, ...(data || [])])).filter(
+        //   (post) => post.authorId === id
+        // );
+        const updatedPosts = data?.pages?.flatMap((page) => page) || [];
         dispatch(updateFeed(updatedPosts));
         setLoading(false);
       }
@@ -32,5 +34,13 @@ export const useGetProfilePosts = () => {
     }
   }, [id]);
 
-  return { posts, loading, error };
+  useEffect(() => {
+    if(isLoading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  } ,[]);
+
+  return { posts, loading, error, fetchNextPage, hasNextPage, isFetchingNextPage, isError, errorFetch };
 };

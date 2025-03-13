@@ -1,6 +1,6 @@
 import { StyledChatRoomsListContainer } from './ChatRoomsListContainer';
 import { ChatRoom } from '../chatroom/ChatRoom';
-import { UseGetChats } from '../../../../queries/chatQueries';
+import { UseGetChatRooms } from '../../../../queries/chatQueries';
 import Loader from '../../../../components/loader/Loader';
 import { StyledChatRoomsListHeader } from './ChatRoomsListHeader';
 import {UseGetProfile} from "../../../../queries/userQueries"
@@ -10,7 +10,7 @@ interface ChatRoomsListProps {
 }
 
 const ChatRoomsList = ({ onSelectedChatroom }: ChatRoomsListProps) => {
-  const { data: chatrooms, isLoading, isError, error } = UseGetChats();
+  const { data: chatrooms, isLoading, isError, error } = UseGetChatRooms();
   const {data: currentUser} = UseGetProfile();
 
   if (isLoading) return <Loader />;

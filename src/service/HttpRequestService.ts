@@ -191,14 +191,6 @@ const httpRequestService = {
     }
   },
 
-  getChats: async () => {
-    const res = await apiClient.get(`${url}/chat`);
-
-    if (res.status === 200) {
-      return res.data;
-    }
-  },
-
   getMutualFollows: async () => {
     const res = await apiClient.get(`${url}/follow/mutual`);
     if (res.status === 200) {
@@ -219,6 +211,35 @@ const httpRequestService = {
   getChat: async (id: string) => {
     const res = await apiClient.get(`${url}/chat/${id}`);
     if (res.status === 200) {
+      return res.data;
+    }
+  },
+
+  getChats: async () => {
+    const res = await apiClient.get(`${url}/chat`);
+
+    if (res.status === 200) {
+      return res.data;
+    }
+  },
+
+  getChatMessages: async (id: string) => {
+    const res = await apiClient.get(`${url}/message/${id}`);
+
+    if(res.status === 200) {
+      return res.data;
+    }
+  },
+
+  getChatMessagesPaginated: async (id: string, limit: number, after: string) => {
+    const res = await apiClient.get(`${url}/message/${id}`, {
+      params: {
+        limit,
+        after,
+      },
+    })
+
+    if(res.status === 200) {
       return res.data;
     }
   },

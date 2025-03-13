@@ -1,6 +1,7 @@
 import ChatRoomsList from "./components/chatrooms-list/ChatRoomsList"
 import {Chat} from "./components/chat/Chat"
 import {useState} from "react"
+import {StyledChatContainer} from "./components/chat/ChatContainer"
 
 const MessagePage = () => {
   const [selectedChatroom, setSelectedChatroom] = useState<string | null>(null)
@@ -12,7 +13,9 @@ const MessagePage = () => {
   return (
     <>
       <ChatRoomsList onSelectedChatroom={handleClick} />
-      <Chat chatroomId={selectedChatroom}/>
+      <StyledChatContainer>
+        <Chat chatroomId={selectedChatroom}/>
+      </StyledChatContainer>
     </>
   )
 }

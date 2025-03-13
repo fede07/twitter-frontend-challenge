@@ -62,13 +62,22 @@ export interface User {
   posts: Post[];
 }
 
+// export interface MessageDTO {
+//   id: string;
+//   content: string;
+//   createdAt: Date;
+//   chatId: string;
+//   senderId: string;
+//   sender: Author;
+// }
+
 export interface MessageDTO {
   id: string;
-  content: string;
-  createdAt: Date;
-  chatId: string;
+  text: string;
   senderId: string;
-  sender: Author;
+  createdAt: Date;
+  roomId: string;
+  recipientId: string;
 }
 
 export interface ChatDTO {

@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
-export const StyledChatContainer = styled.div`
+export const StyledMessageContainer = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 16px;
-    gap: 12px;
 `

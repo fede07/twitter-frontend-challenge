@@ -1,78 +1,111 @@
-import {useEffect ,useState} from "react"
-import {socket} from "../../../../socket"
-import {generateRoomId} from "../../../../util/chat"
-import {UseGetProfile} from "../../../../queries/userQueries"
-import LabeledInput from "../../../../components/labeled-input/LabeledInput"
+import { useEffect, useState } from 'react';
+import { socket } from '../../../../socket';
+import { generateRoomId } from '../../../../util/chat';
+import { UseGetProfile } from '../../../../queries/userQueries';
+import LabeledInput from '../../../../components/labeled-input/LabeledInput';
+import { UseGetChatMessages } from '../../../../queries/chatQueries';
+import Loader from '../../../../components/loader/Loader';
+import { useToast } from '../../../../context/ToastContext';
+import { ToastType } from '../../../../components/toast/Toast';
+import {StyledMessage} from "./StyledMessage"
+import {StyledMessageContainer} from "./MessageContainer"
 
 interface ChatProps {
   chatroomId: string | null;
 }
 
-export const Chat = ({chatroomId}: ChatProps) => {
-  const [messages, setMessages] = useState<string[]>([]);
-  const [input, setInput] = useState<string>("");
+interface Message {
+  text: string;
+  senderId: string;
+}
+
+export const Chat = ({ chatroomId }: ChatProps) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState<string>('');
   const [roomId, setRoomId] = useState<string | null>(null);
-  const {data: user} = UseGetProfile();
+  const { data: user } = UseGetProfile();
+  const { showToast } = useToast();
 
   useEffect(() => {
-    if(!chatroomId) return
+    setRoomId(generateRoomId(user?.id || '', chatroomId || ''));
+  }, [user, chatroomId]);
 
-    if(!socket.connected) {
-      socket.connect()
-      console.log("socket connected")
+  const { data: history, isLoading: isLoadingMessages } = UseGetChatMessages(
+    roomId!,
+    !!chatroomId
+  );
+
+  useEffect(() => {
+    if (history && !isLoadingMessages) {
+      setMessages(
+        history.map((msg: Message) => ({
+          text: msg.text,
+          senderId: msg.senderId,
+        }))
+      );
+      console.log(history);
+    }
+  }, [history, isLoadingMessages]);
+
+  useEffect(() => {
+    if (!chatroomId) return;
+
+    if (!socket.connected) {
+      socket.connect();
     }
 
-    socket.emit("join-chat", {recipientId: chatroomId})
-    console.log("chatroomId:", chatroomId)
+    socket.emit('join-chat', { recipientId: chatroomId });
 
-    socket.on("joined-chat", () => {
-      console.log(`joined chatroom ${chatroomId}`)
-      setRoomId(generateRoomId(user.id, chatroomId))
-    })
+    socket.on('joined-chat', () => {
+      setRoomId(generateRoomId(user.id, chatroomId));
+    });
 
-    socket.on("chat-message", (message: string)=> {
-      console.log(message)
-      setMessages((prevMessages) => [...prevMessages, message])
-    })
+    socket.on('chat-message', (message: Message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
 
-    socket.on("new-message", (message: string) => {
-      console.log(message)
-      setMessages((prevMessages) => [...prevMessages, message])
-    })
+    socket.on('new-message', (message: Message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
 
     socket.on('error', (err) => {
-      console.log(`Error en socket: ${err}`)
-    })
+      showToast(err.message, ToastType.ALERT);
+    });
 
     return () => {
-      socket.emit("leaveChatroom", chatroomId)
-      socket.off("chat-message")
-      socket.disconnect()
-    }
-  } ,[chatroomId]);
+      socket.emit('leaveChatroom', chatroomId);
+      socket.off('chat-message');
+      socket.disconnect();
+    };
+  }, [chatroomId]);
 
   const sendMessage = () => {
-    if (input.trim() === "" || !chatroomId) {
+    if (input.trim() === '' || !chatroomId) {
       return;
     }
-    socket.emit('chat-message',{roomId, message: input});
-    setInput("");
-  }
+    socket.emit('chat-message', { roomId, message: input });
+    setInput('');
+  };
 
-  if(!chatroomId) {
-    return (
-      <div>
-        Select a chatroom to start chatting!
-      </div>
-    )
+  if (!chatroomId) {
+    return <div>Select a chatroom to start chatting!</div>;
   }
 
   return (
     <div>
       <div>
-        {messages.map((msg, index) => (
-          <div key={index}>{msg}</div>
-        ))}
+        {isLoadingMessages ? (
+          <Loader />
+        ) : (
+          messages.map((msg, index) => (
+            <StyledMessageContainer>
+              <StyledMessage key={index} isUser={user?.id === msg.senderId}>
+                {msg.text}
+              </StyledMessage>
+            </StyledMessageContainer>
+
+          ))
+        )}
       </div>
       <LabeledInput
         type="text"
@@ -85,4 +118,4 @@ export const Chat = ({chatroomId}: ChatProps) => {
       <button onClick={sendMessage}>Send</button>
     </div>
   );
-}
+};

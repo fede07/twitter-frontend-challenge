@@ -28,12 +28,18 @@ export function UseGetInfinitePosts(limit: number, query: string,enabled: boolea
   })
 }
 
-export function UseGetPostById(id: string, enabled: boolean = true) {
-  const service = useHttpRequestService();
-  return useQuery({
-    queryKey: ["post", id],
-    queryFn: async () => await service.getPostById(id),
-    staleTime: 10 * 6 * 1000,
+export function UseGetInfinitePostsFromProfile(id: string, limit: number, query: string, enabled: boolean = true) {
+  const service = useHttpRequestService()
+
+  return useInfiniteQuery({
+    queryKey: ['infinite-posts-id', query],
+    queryFn: async ({pageParam = null}) => {
+      return await service.getPaginatedPostsFromProfile(limit, pageParam ?? '', id)
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      return lastPage?.length ? lastPage[lastPage.length - 1]?.id : undefined
+    },
     enabled: enabled,
   })
 }
@@ -48,3 +54,15 @@ export function UseGetPostsFromProfile(id: string, enabled: boolean = true) {
     refetchOnWindowFocus: true,
   })
 }
+
+export function UseGetPostById(id: string, enabled: boolean = true) {
+  const service = useHttpRequestService();
+  return useQuery({
+    queryKey: ["post", id],
+    queryFn: async () => await service.getPostById(id),
+    staleTime: 10 * 6 * 1000,
+    enabled: enabled,
+  })
+}
+
+

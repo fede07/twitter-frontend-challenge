@@ -111,14 +111,10 @@ const ProfilePage = () => {
 
   const getProfileData = async () => {
     try {
-      console.log ("Id: ", id)
-      console.log("profilePosts: ", profilePosts);
       if (!profilePosts) {
-        console.log("profilePosts not loaded!")
         await refetchGetPostsFromProfile();
       }
       if (profilePosts && !isLoadingPostsFromProfile) {
-        console.log("profilePosts loaded!")
         setProfile(profilePosts);
         setFollowing(
           profilePosts
@@ -129,7 +125,6 @@ const ProfilePage = () => {
         )
       }
     } catch (e) {
-      console.log("profileView:", profileView);
       try {
         if (!profileView) {
           await refetchUserProfileView();
