@@ -22,7 +22,7 @@ export const StyledBorderlessTextArea = styled.textarea`
   overflow-wrap: break-word; /* Added overflow-wrap property */
   resize: none;
   /* Adjust the height based on the number of rows */
-  height: 100px;
+  height: 30px;
 `;
 
 export default StyledBorderlessTextArea;

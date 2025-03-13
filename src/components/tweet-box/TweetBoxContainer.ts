@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledTweetBoxContainer = styled.div`
   display: flex;
@@ -6,6 +6,7 @@ export const StyledTweetBoxContainer = styled.div`
   align-items: flex-start;
   box-sizing: border-box;
   width: 100%;
+  height: 100%;
   button {
     display: flex;
   }
