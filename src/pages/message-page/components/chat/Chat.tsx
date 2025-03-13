@@ -9,6 +9,7 @@ import { useToast } from '../../../../context/ToastContext';
 import { ToastType } from '../../../../components/toast/Toast';
 import {StyledMessage} from "./StyledMessage"
 import {StyledMessageContainer} from "./MessageContainer"
+import {StyledChatContainer} from "./ChatContainer"
 
 interface ChatProps {
   chatroomId: string | null;
@@ -93,7 +94,7 @@ export const Chat = ({ chatroomId }: ChatProps) => {
 
   return (
     <div>
-      <div>
+      <StyledChatContainer>
         {isLoadingMessages ? (
           <Loader />
         ) : (
@@ -103,10 +104,9 @@ export const Chat = ({ chatroomId }: ChatProps) => {
                 {msg.text}
               </StyledMessage>
             </StyledMessageContainer>
-
           ))
         )}
-      </div>
+      </StyledChatContainer>
       <LabeledInput
         type="text"
         value={input}

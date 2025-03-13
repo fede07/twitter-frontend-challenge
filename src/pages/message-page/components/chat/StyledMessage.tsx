@@ -5,11 +5,12 @@ export const StyledMessage = styled.div<{ isUser: boolean }>`
     flex-direction: row;
     align-self: ${({isUser}) => (isUser ? 'flex-end' : 'flex-start')};
     background: ${({isUser}) =>
-            isUser ? 'rgb(237,237,237)' : 'rgb(74, 153, 233)'};
+            isUser ? 'rgb(74, 153, 233)' : 'rgb(237,237,237)'};
     text-align: ${({isUser}) => (isUser ? 'left' : 'right')};
     padding: 16px;
-    border-radius: ${({isUser}) => (isUser ? '16px 16px 0 16px' : '16px 16px 16px 0')};
-    color: ${({isUser}) => (isUser ? 'rgb(0, 0, 0)' : 'rgb(255, 255, 255)')};
-    margin: 8px;
+    border-radius: ${({isUser}) => (isUser ? '24px 24px 0 24px' : '24px 24px 24px 0')};
+    color: ${({isUser}) => (isUser ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)')};
+    margin: 4px;
     width: fit-content;
+    min-width: 30px;
 `;
