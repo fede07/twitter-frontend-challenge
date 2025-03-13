@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { setLength, updateFeed } from "../redux/user";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import {UseGetPosts} from "../queries/postQueries"
+import {UseGetInfinitePosts } from "../queries/postQueries"
 
 export const useGetFeed = () => {
   const [loading, setLoading] = useState(false);
@@ -9,18 +9,28 @@ export const useGetFeed = () => {
   const posts = useAppSelector((state) => state.user.feed);
   const query = useAppSelector((state) => state.user.query);
 
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError
+  } = UseGetInfinitePosts(5, query, !!query)
+
   const dispatch = useAppDispatch();
 
   // const service = useHttpRequestService();
 
-  const { data } = UseGetPosts(query, !!query)
+  // const { data } = UseGetPosts(query, !!query)
 
   useEffect(() => {
     try {
       setLoading(true);
       setError(false);
       if (data) {
-        const updatedPosts = Array.from(new Set([...posts, ...(data || [])]));
+        // const updatedPosts = Array.from(new Set([...posts, ...(data || [])]));
+        const updatedPosts = data?.pages?.flatMap((page) => page) || [];
         dispatch(updateFeed(updatedPosts));
         dispatch(setLength(updatedPosts.length));
         setLoading(false);
@@ -30,5 +40,14 @@ export const useGetFeed = () => {
       console.log(e);
     }
   }, [query]);
-  return { posts, loading, error };
+
+  useEffect(() => {
+    if(isLoading){
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  } ,[isLoading]);
+
+  return { posts, loading, error, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError };
 };

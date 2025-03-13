@@ -8,7 +8,6 @@ import icon from "../../assets/icon.jpg";
 import {StyledP} from "../common/text";
 import {StyledContainer} from "../common/Container";
 import {useUser} from "../../context/UserContext"
-import ModalWrapper from "../modal-wrapper/ModalWrapper"
 
 
 interface ProfileLogoutPromptProps {
@@ -37,14 +36,7 @@ const ProfileLogoutPrompt = ({margin, direction}: ProfileLogoutPromptProps) => {
         event.stopPropagation();
     };
 
-    const onClose = () => {
-        setLogoutOpen(false);
-    }
-
-
     return (
-
-      <ModalWrapper show={true} onClose={onClose}>
           <StyledContainer
             maxHeight={"48px"}
             flexDirection={"row"}
@@ -67,8 +59,6 @@ const ProfileLogoutPrompt = ({margin, direction}: ProfileLogoutPromptProps) => {
                   <StyledP primary={false}>{`@${user?.username}`}</StyledP>
               </StyledContainer>
           </StyledContainer>
-      </ModalWrapper>
-
     )
 }
 

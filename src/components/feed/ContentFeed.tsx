@@ -1,10 +1,17 @@
 import React from "react";
 import Feed from "./Feed";
 import { useGetFeed } from "../../hooks/useGetFeed";
+import InfiniteScroll from "../infinite-scroll/InfiniteScroll"
 
 const ContentFeed = () => {
-  const { posts, loading } = useGetFeed();
+  const {posts ,fetchNextPage ,hasNextPage ,isLoading} =
+    useGetFeed();
 
-  return <Feed posts={posts} loading={loading} />;
-};
+  return (
+    <InfiniteScroll onLoadMore={fetchNextPage} hasMore={hasNextPage} loading={isLoading}>
+      <Feed posts={posts} loading={isLoading}/>
+    </InfiniteScroll>
+  )
+}
+
 export default ContentFeed;
