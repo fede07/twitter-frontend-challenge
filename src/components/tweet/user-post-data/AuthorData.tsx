@@ -28,7 +28,7 @@ const AuthorData = ({
   return (
     <StyledAuthorDataContainer>
       <Avatar
-        src={profilePicture === undefined ||profilePicture === null ? icon : profilePicture}
+        src={profilePicture === undefined ||profilePicture === null || profilePicture === "" ? icon : profilePicture}
         alt={name}
         onClick={redirectToProfile}
       />

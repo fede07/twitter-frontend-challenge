@@ -2,10 +2,10 @@ import Toast ,{ToastType} from "../components/toast/Toast"
 import {createContext ,ReactNode ,useContext ,useState} from "react"
 
 interface ToastContextValue {
-  showToast: (message: string, type: ToastType) => void;
+  showToast: (message: string, type: ToastType, show?:boolean) => void;
 }
 
-const TIMEOUT_SECONDS = 3
+const TIMEOUT_SECONDS = 60
 
 export const ToastContext = createContext<ToastContextValue | undefined>({
   showToast: () => {
@@ -13,7 +13,7 @@ export const ToastContext = createContext<ToastContextValue | undefined>({
 })
 
 export const ToastProvider = ({children}: { children: ReactNode }) => {
-  const [toast, setToast] = useState<{message: string, type: ToastType} | null>(null)
+  const [toast, setToast] = useState<{message: string, type: ToastType, show?: boolean} | null>(null)
 
   const showToast = (message: string, type: ToastType) => {
     setToast({message, type})
@@ -25,7 +25,7 @@ export const ToastProvider = ({children}: { children: ReactNode }) => {
   return (
     <ToastContext.Provider value={{showToast}}>
       {children}
-      {toast && <Toast message={toast.message} type={toast.type} />}
+      {toast && <Toast message={toast.message} type={toast.type} show={toast.show? toast.show : true} />}
     </ToastContext.Provider>
   )
 }

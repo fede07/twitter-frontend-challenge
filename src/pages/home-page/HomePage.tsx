@@ -7,12 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { StyledUserSuggestionContainer } from "./UserSeuggestionContainer";
 import {UseGetPosts} from "../../queries/postQueries"
+import {ToastType} from "../../components/toast/Toast"
+import {useToast} from "../../context/ToastContext"
 
 const HomePage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const query = useAppSelector((state) => state.user.query);
   // const service = useHttpRequestService();
+  const { showToast } = useToast();
+
 
   const { data } = UseGetPosts(query, !!query)
 
@@ -29,6 +33,7 @@ const HomePage = () => {
 
   useEffect(() => {
     handleSetUser().then();
+    showToast("Welcome!", ToastType.SUCCESS)
   }, []);
 
   return (

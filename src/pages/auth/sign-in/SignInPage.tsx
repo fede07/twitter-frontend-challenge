@@ -27,7 +27,7 @@ const SignInPage = () => {
   const httpRequestService = useHttpRequestService();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { showToast } = useToast();
+  const { showToast } = useToast()
 
   const queryClient = useQueryClient();
 

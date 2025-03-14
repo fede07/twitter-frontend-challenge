@@ -3,11 +3,12 @@ import {
     StyledLogoutPrompt,
     StyledProfileLogoutPromptContainer
 } from "./StyledProfileLogoutPromptContainer";
-import React, {useState} from "react";
+import React ,{useEffect ,useState} from "react";
 import icon from "../../assets/icon.jpg";
 import {StyledP} from "../common/text";
 import {StyledContainer} from "../common/Container";
 import {useUser} from "../../context/UserContext"
+import {S3Service} from "../../service/S3Service"
 
 
 interface ProfileLogoutPromptProps {
@@ -17,8 +18,17 @@ interface ProfileLogoutPromptProps {
 
 const ProfileLogoutPrompt = ({margin, direction}: ProfileLogoutPromptProps) => {
     const [logoutOpen, setLogoutOpen] = useState(false);
+    const [userProfilePicture, setUserProfilePicture] = useState("")
     // const service = useHttpRequestService()
     const { user } = useUser()
+
+
+    useEffect(() => {
+        if(user?.profilePicture) {
+            setUserProfilePicture(S3Service.getPublicUrl(user?.profilePicture))
+        }
+    } ,[user]);
+
 
     // useEffect(() => {
     //     handleGetUser().then(r => setUser(r))
@@ -47,7 +57,7 @@ const ProfileLogoutPrompt = ({margin, direction}: ProfileLogoutPromptProps) => {
             cursor={'pointer'}
           >
               <StyledProfileLogoutPromptContainer direction={direction}>
-                  <img src={user?.profilePicture ?? icon} className="icon" alt="Icon"/>
+                  <img src={user?.profilePicture ? userProfilePicture : icon} className="icon" alt="Icon"/>
                   {logoutOpen &&
                     <StyledLogoutPrompt margin={margin} onClick={(event) => handleButtonClick(event)}>
                         <LogoutPrompt show={logoutOpen}/>

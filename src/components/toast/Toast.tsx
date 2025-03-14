@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { StyledToastContainer } from './ToastContainer';
-import { AlertIcon } from '../icon/Icon';
+import {AlertIcon} from '../icon/Icon';
 import { LightTheme } from '../../util/LightTheme';
 
 export enum ToastType {
   ALERT = 'ALERT',
+  ERROR = 'ERROR',
   SUCCESS = 'SUCCESS',
 }
 
@@ -19,6 +20,7 @@ const Toast = ({ message, type, show }: ToastProps) => {
 
   const iconMap = {
     [ToastType.ALERT]: <AlertIcon />,
+    [ToastType.ERROR]: <AlertIcon color={"#ffffff"}/>,
     [ToastType.SUCCESS]: null,
   };
 
