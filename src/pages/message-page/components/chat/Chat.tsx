@@ -1,15 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { socket } from '../../../../socket';
 import { generateRoomId } from '../../../../util/chat';
 import { UseGetProfile } from '../../../../queries/userQueries';
-import LabeledInput from '../../../../components/labeled-input/LabeledInput';
 import { UseGetChatMessages } from '../../../../queries/chatQueries';
 import Loader from '../../../../components/loader/Loader';
 import { useToast } from '../../../../context/ToastContext';
 import { ToastType } from '../../../../components/toast/Toast';
-import {StyledMessage} from "./StyledMessage"
-import {StyledMessageContainer} from "./MessageContainer"
-import {StyledChatContainer} from "./ChatContainer"
+import { StyledMessage } from './StyledMessage';
+import { StyledMessageContainer } from './MessageContainer';
+import ButtonAlt from '../../../../components/button-alt/ButtonAlt';
+import { SendHorizontal } from 'lucide-react';
+import { StyledChatInputContainer } from './ChatInputContainer';
+import { StyledChat } from './StyledChat';
+import { StyledChatContainer } from './ChatContainer';
+import Input from '../../../../components/input/Input';
+import { InputSize } from '../../../../components/input/StyledInput';
+import {ButtonAltSize ,ButtonAltVariant} from "../../../../components/button-alt/StyledButtonAlt"
+import StyledEmptyChat from "./EmptyChat"
 
 interface ChatProps {
   chatroomId: string | null;
@@ -26,15 +33,31 @@ export const Chat = ({ chatroomId }: ChatProps) => {
   const [roomId, setRoomId] = useState<string | null>(null);
   const { data: user } = UseGetProfile();
   const { showToast } = useToast();
+  const chatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setRoomId(generateRoomId(user?.id || '', chatroomId || ''));
   }, [user, chatroomId]);
 
+  /*
+  TODO: Implement infinite scrolling for messages. Use "GetInfiniteChatMessages"
+   from "chatQueries"
+  */
+
   const { data: history, isLoading: isLoadingMessages } = UseGetChatMessages(
     roomId!,
     !!chatroomId
   );
+
+  const scrollToBottom = () => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }
+
+  useEffect(() => {
+    scrollToBottom();
+  } ,[messages]);
 
   useEffect(() => {
     if (history && !isLoadingMessages) {
@@ -55,18 +78,20 @@ export const Chat = ({ chatroomId }: ChatProps) => {
       socket.connect();
     }
 
+    socket.once('connect', () => {
+      console.log('Socket connected');
+      socket.emit('join-chat', { recipientId: chatroomId });
+    })
+
     socket.emit('join-chat', { recipientId: chatroomId });
 
     socket.on('joined-chat', () => {
-      setRoomId(generateRoomId(user.id, chatroomId));
     });
 
     socket.on('chat-message', (message: Message) => {
+      if(!message.text || message.text.trim() === '') return;
       setMessages((prevMessages) => [...prevMessages, message]);
-    });
-
-    socket.on('new-message', (message: Message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+      socket.emit('chat-message', { roomId: chatroomId, message });
     });
 
     socket.on('error', (err) => {
@@ -85,16 +110,24 @@ export const Chat = ({ chatroomId }: ChatProps) => {
       return;
     }
     socket.emit('chat-message', { roomId, message: input });
+    setMessages((prevMessages) => [...prevMessages, { text: input, senderId: user?.id || '' }])
     setInput('');
   };
 
+  // TODO: Implement "New Message" Button
+  // TODO: Add Translation
   if (!chatroomId) {
-    return <div>Select a chatroom to start chatting!</div>;
+    return (
+      <StyledEmptyChat>
+        <h2>Select a Message</h2>
+        <p>Choose from your existing conversations, start a new one, or just keep swimming.</p>
+      </StyledEmptyChat>
+    )
   }
 
   return (
-    <div>
-      <StyledChatContainer>
+    <StyledChatContainer>
+      <StyledChat ref={chatRef}>
         {isLoadingMessages ? (
           <Loader />
         ) : (
@@ -106,16 +139,19 @@ export const Chat = ({ chatroomId }: ChatProps) => {
             </StyledMessageContainer>
           ))
         )}
-      </StyledChatContainer>
-      <LabeledInput
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        title={''}
-        placeholder={'Start Writing!'}
-        required={false}
-      />
-      <button onClick={sendMessage}>Send</button>
-    </div>
+      </StyledChat>
+      <StyledChatInputContainer>
+        <Input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={'Start Writing!'}
+          size={InputSize.SMALL}
+        />
+        <ButtonAlt onClick={sendMessage} variant={ButtonAltVariant.DEFAULT} size={ButtonAltSize.SMALL}>
+          <SendHorizontal />
+        </ButtonAlt>
+      </StyledChatInputContainer>
+    </StyledChatContainer>
   );
 };

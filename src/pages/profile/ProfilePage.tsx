@@ -139,9 +139,9 @@ const ProfilePage = () => {
     }
   }
 
-  if (isLoadingPostsFromProfile) {
-    return <Loader/>
-  }
+  // if (isLoadingPostsFromProfile) {
+  //   return <Loader/>
+  // }
 
   return (
     <>

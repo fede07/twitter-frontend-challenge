@@ -13,4 +13,8 @@ export const StyledMessage = styled.div<{ isUser: boolean }>`
     margin: 4px;
     width: fit-content;
     min-width: 30px;
+    max-width: 80%;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
 `;
