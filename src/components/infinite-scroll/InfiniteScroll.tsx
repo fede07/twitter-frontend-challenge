@@ -30,10 +30,8 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
   }
 
   return (
-    <StyledInfiniteScroll>
-      <div ref={containerRef} onScroll={handleScroll}>
+    <StyledInfiniteScroll ref={containerRef} onScroll={handleScroll}>
         {children}
-      </div>
     </StyledInfiniteScroll>
   )
 }

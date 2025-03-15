@@ -3,8 +3,6 @@ import { StyledAuthorDataContainer } from "./AuthorDataContainer";
 import Avatar from "../../common/avatar/Avatar";
 import { StyledDot } from "../../common/Dot";
 import { useNavigate } from "react-router-dom";
-import icon from "../../../assets/icon.jpg"
-
 interface UserPostDataProps {
   createdAt: Date;
   id: string;
@@ -28,7 +26,7 @@ const AuthorData = ({
   return (
     <StyledAuthorDataContainer>
       <Avatar
-        src={profilePicture === undefined ||profilePicture === null || profilePicture === "" ? icon : profilePicture}
+        src={profilePicture}
         alt={name}
         onClick={redirectToProfile}
       />

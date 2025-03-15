@@ -25,8 +25,13 @@ interface TweetBoxProps {
   borderless?: boolean;
 }
 
-const TweetBox: React.FC<TweetBoxProps> = ({ parentId, onClose, mobile, borderless }) => {
-  const [content, setContent] = useState<string>("");
+const TweetBox: React.FC<TweetBoxProps> = ({
+  parentId,
+  onClose,
+  mobile,
+  borderless,
+}) => {
+  const [content, setContent] = useState<string>('');
   const [images, setImages] = useState<File[]>([]);
   const [imagesPreview, setImagesPreview] = useState<string[]>([]);
 
@@ -34,8 +39,8 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, onClose, mobile, borderle
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const service = useHttpRequestService();
-  const { user } = useUser()
-  const { showToast } = useToast()
+  const { user } = useUser();
+  const { showToast } = useToast();
 
   const { refetch } = UseGetPosts(query);
 
@@ -48,23 +53,29 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, onClose, mobile, borderle
   // };
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-      setContent(e.target.value);
+    setContent(e.target.value);
   };
 
   const handleSubmit = async () => {
-
     try {
-      await service.createPost({content, images, parentId: parentId ? parentId : undefined})
-      setContent("");
+      await service.createPost({
+        content,
+        images,
+        parentId: parentId ? parentId : undefined,
+      });
+      setContent('');
       setImages([]);
       setImagesPreview([]);
       dispatch(setLength(length + 1));
       const { data: posts } = await refetch();
       dispatch(updateFeed(posts));
       onClose && onClose();
-      showToast("Tweet created!", ToastType.SUCCESS)
+      showToast('Tweet created!', ToastType.SUCCESS);
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "An unexpected error occurred", ToastType.ALERT)
+      showToast(
+        e instanceof Error ? e.message : 'An unexpected error occurred',
+        ToastType.ALERT
+      );
     }
   };
 
@@ -88,6 +99,7 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, onClose, mobile, borderle
           flexDirection="row"
           justifyContent="space-between"
           alignItems="center"
+          border={borderless ? 'none' : '1px solid #ebeef0'}
         >
           <BackArrowIcon onClick={onClose} />
           <Button
@@ -99,11 +111,11 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, onClose, mobile, borderle
           />
         </StyledContainer>
       )}
-      <StyledContainer style={{ width: "100%" }}>
+      <StyledContainer style={{ width: '100%' }}>
         <TweetInput
           onChange={handleChange}
           maxLength={240}
-          placeholder={t("placeholder.tweet")}
+          placeholder={t('placeholder.tweet')}
           value={content}
           src={user?.profilePicture}
           alt={user?.name}
@@ -124,9 +136,7 @@ const TweetBox: React.FC<TweetBoxProps> = ({ parentId, onClose, mobile, borderle
               size="SMALL"
               onClick={handleSubmit}
               disabled={
-                content.length <= 0 ||
-                content.length > 240 ||
-                images.length > 4
+                content.length <= 0 || content.length > 240 || images.length > 4
               }
             />
           )}

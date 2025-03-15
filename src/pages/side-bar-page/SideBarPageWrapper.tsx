@@ -12,6 +12,11 @@ export const StyledSideBarPageWrapper = styled.div`
   padding-left: 15%;
   padding-right: 15%;
     
+    @media (max-width: 1440px) {
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+    
     @media (max-width: 1024px) {
         padding-left: 0;
         padding-right: 0;

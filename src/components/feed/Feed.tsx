@@ -12,8 +12,7 @@ interface FeedProps {
 const Feed = ({ posts, loading }: FeedProps) => {
 
   if (!posts) {
-    console.log("no posts");
-    return <span></span>;
+    return <StyledContainer width={"100%"} alignItems={"center"}>No posts yet!</StyledContainer>
   }
 
   return (

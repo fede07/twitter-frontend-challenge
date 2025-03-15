@@ -19,6 +19,7 @@ import { StyledNavItemsContainer } from './navItem/NavItemsContainer';
 import ProfileLogoutPrompt from '../profile-logout/ProfileLogoutPrompt';
 import { useUser } from '../../context/UserContext';
 import {Pencil} from "lucide-react"
+import {StyledProfileLogoutPromptContainer} from "../profile-logout/ProfileLogoutPromptContainer"
 
 const NavBar = () => {
   const location = useLocation();
@@ -99,7 +100,9 @@ const NavBar = () => {
           }}
         />
       </StyledContainer>
-      <ProfileLogoutPrompt margin={'50px 0'} direction={'column-reverse'} />
+      <StyledProfileLogoutPromptContainer>
+        <ProfileLogoutPrompt margin={'50px 0'} direction={'column-reverse'} />
+      </StyledProfileLogoutPromptContainer>
     </StyledNavBarContainer>
   );
 };

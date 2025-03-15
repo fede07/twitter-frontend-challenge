@@ -1,6 +1,5 @@
 import React from "react";
 import Avatar from "../common/avatar/Avatar";
-import icon from "../../assets/icon.jpg";
 import { useNavigate } from "react-router-dom";
 import "./UserDataBox.css";
 import {StyledUserDataBoxContainer} from "./StyledUserDataBoxContainer"
@@ -27,7 +26,7 @@ export const UserDataBox = ({
       <Avatar
         width={"48px"}
         height={"48px"}
-        src={profilePicture ?? icon}
+        src={profilePicture}
         onClick={() => onClick ?? navigate(`/profile/${id}`)}
         alt={name ?? "Name"}
       />

@@ -78,9 +78,7 @@ const Tweet = ({post, user}: TweetProps) => {
           name={post.author.name ?? post.author.username}
           username={post.author.username}
           createdAt={post.createdAt}
-          profilePicture={
-            post.author.profilePicture ? post.author.profilePicture : undefined
-          }
+          profilePicture={post.author.profilePicture}
         />
         {post.authorId === user?.id && (
           <>

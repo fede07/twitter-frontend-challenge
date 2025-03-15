@@ -13,9 +13,11 @@ import { StyledH5 } from '../../components/common/text';
 import { UseGetPostsFromProfile } from '../../queries/postQueries';
 import { UseGetProfileView } from '../../queries/userQueries';
 import { useUser } from '../../context/UserContext';
-import {StyledUserSuggestionContainer} from "../home-page/UserSeuggestionContainer"
-import {SearchBar} from "../../components/search-bar/SearchBar"
-import SuggestionBox from "../home-page/components/suggestionBox/SuggestionBox"
+import { StyledUserSuggestionContainer } from '../home-page/UserSeuggestionContainer';
+import { SearchBar } from '../../components/search-bar/SearchBar';
+import SuggestionBox from '../home-page/components/suggestionBox/SuggestionBox';
+import {useToast} from "../../context/ToastContext"
+import {ToastType} from "../../components/toast/Toast"
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState<User | null>(null);
@@ -43,6 +45,8 @@ const ProfilePage = () => {
   } = UseGetPostsFromProfile(id!, !!id);
   const { data: profileView, refetch: refetchUserProfileView } =
     UseGetProfileView(id!, !!id);
+
+  const { showToast } = useToast();
 
   // useEffect(() => {
   //   handleGetUser().then((r) => setUser(r));
@@ -104,7 +108,7 @@ const ProfilePage = () => {
         });
       } else {
         await service.followUser(id);
-        service.getProfile(id).then((res) => setProfile(res));
+        await service.getProfile(id).then((res) => setProfile(res));
       }
       return await getProfileData();
     }
@@ -135,7 +139,11 @@ const ProfilePage = () => {
           setFollowing(false);
         }
       } catch (e) {
-        console.log(e);
+        if (e instanceof Error) {
+          showToast(e.message, ToastType.ALERT);
+        } else {
+          showToast('An unexpected error occurred.', ToastType.ALERT);
+        }
       }
     }
   };
@@ -143,13 +151,13 @@ const ProfilePage = () => {
   // if (isLoadingPostsFromProfile) {
   //   return <Loader/>
   // }
-
   return (
     <>
       <StyledContainer
         maxHeight={'100vh'}
         borderRight={'1px solid #ebeef0'}
         maxWidth={'620px'}
+        minWidth={'400px'}
       >
         {profile && (
           <>

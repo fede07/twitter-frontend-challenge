@@ -11,6 +11,7 @@ import TweetBox from '../../components/tweet-box/TweetBox';
 import CommentFeed from '../../components/feed/CommentFeed';
 import { useToast } from '../../context/ToastContext';
 import { ToastType } from '../../components/toast/Toast';
+import {useParams} from "react-router-dom"
 
 // interface PostPageProps {}
 //
@@ -20,7 +21,7 @@ import { ToastType } from '../../components/toast/Toast';
 // }
 
 const PostPage = () => {
-  const [postId, setPostId] = useState('');
+  const { id: postId } = useParams<{ id: string }>();
   const [post, setPost] = useState<Post | undefined>(undefined);
   const [error, setError] = useState(false);
   const { showToast } = useToast();
@@ -38,7 +39,7 @@ const PostPage = () => {
     isLoading: isLoadingPost,
     error: errorPost,
     isError: isErrorPost,
-  } = UseGetPostById(postId);
+  } = UseGetPostById(postId!);
 
   const fetchPost = () => {
     if (!post_ || !user) {
@@ -47,7 +48,6 @@ const PostPage = () => {
       return
     }
     setPost(post_);
-    setPostId(post_.id);
   };
 
   useEffect(() => {
@@ -76,6 +76,15 @@ const PostPage = () => {
     </StyledContainer>
   )
 
+  if(!postId) {
+    return (
+      <StyledContainer justifyContent={'center'} alignItems={'center'}>
+        <StyledH5>404</StyledH5>
+        <StyledH5>Page not found</StyledH5>
+      </StyledContainer>
+    )
+  }
+
   return (
     <StyledContainer borderRight={'1px solid #ebeef0'}>
       <StyledContainer
@@ -97,7 +106,7 @@ const PostPage = () => {
             </StyledContainer>
 
             <StyledContainer minHeight={'53.5vh'}>
-              <CommentFeed postId={postId} />
+              <CommentFeed postId={postId!} />
             </StyledContainer>
           </>
         ) : (
