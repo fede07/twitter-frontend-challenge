@@ -23,8 +23,6 @@ const ChatRoomsList = ({ onSelectedChatroom }: ChatRoomsListProps) => {
     </div>
   )
 
-  console.log(chatrooms)
-
   return (
     <StyledChatRoomsListContainer>
       <StyledChatRoomsListHeader>

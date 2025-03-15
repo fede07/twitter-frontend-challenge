@@ -11,6 +11,11 @@ export const StyledSideBarPageWrapper = styled.div`
   box-sizing: border-box;
   padding-left: 15%;
   padding-right: 15%;
+    
+    @media (max-width: 1024px) {
+        padding-left: 0;
+        padding-right: 0;
+    }
 
   @media (max-width: 600px) {
     justify-content: flex-start;

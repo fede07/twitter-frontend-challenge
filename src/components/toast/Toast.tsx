@@ -26,16 +26,23 @@ const Toast = ({ message, type, show }: ToastProps) => {
 
   const toastIcon = iconMap[type] || null;
 
+  const close = () => {
+    setIsShown(false);
+  }
+
   return (
     <>
       {isShown && (
         <StyledToastContainer
           type={type}
           theme={LightTheme}
-          onClick={() => setIsShown(false)}
+          onClick={close}
         >
-          {toastIcon}
-          <p>{message}</p>
+          <>
+            {toastIcon}
+            <p>{message}</p>
+          </>
+          <button onClick={close}>X</button>
         </StyledToastContainer>
       )}
     </>

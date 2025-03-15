@@ -20,6 +20,9 @@ export const StyledTweetButton = styled.button`
     &:active {
         transform: scale(0.95);
     }
+    
+    @media (max-width: 1024px) {
+    }
 
     @media (max-width: 600px) {
         display: flex;

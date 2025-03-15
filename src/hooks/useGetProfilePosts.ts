@@ -32,15 +32,11 @@ export const useGetProfilePosts = () => {
         setError(true);
         setLoading(false);
     }
-  }, [id]);
+  }, [id, data]);
 
   useEffect(() => {
-    if(isLoading) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  } ,[]);
+    setLoading(isLoading);
+  } ,[isLoading]);
 
   return { posts, loading, error, fetchNextPage, hasNextPage, isFetchingNextPage, isError, errorFetch };
 };

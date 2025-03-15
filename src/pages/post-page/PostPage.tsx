@@ -22,7 +22,9 @@ import { ToastType } from '../../components/toast/Toast';
 const PostPage = () => {
   const [postId, setPostId] = useState('');
   const [post, setPost] = useState<Post | undefined>(undefined);
+  const [error, setError] = useState(false);
   const { showToast } = useToast();
+  const [loading, setLoading] = useState(true);
 
   const {
     data: user,
@@ -39,7 +41,11 @@ const PostPage = () => {
   } = UseGetPostById(postId);
 
   const fetchPost = () => {
-    if (!post_ || !user) return;
+    if (!post_ || !user) {
+      setError(true);
+      showToast('Error fetching post', ToastType.ERROR);
+      return
+    }
     setPost(post_);
     setPostId(post_.id);
   };
@@ -48,17 +54,27 @@ const PostPage = () => {
     fetchPost();
   }, [postId]);
 
-  if (isLoadingUser || isLoadingPost) return <Loader />;
+  useEffect(() => {
+    setLoading(isLoadingUser || isLoadingPost);
+  }, [isLoadingPost])
 
   if (isErrorUser ) {
     showToast(errorUser.message, ToastType.ALERT);
-    return <Loader />;
+    return null;
   }
 
   if (isErrorPost) {
     showToast(errorPost.message, ToastType.ALERT);
-    return <Loader />;
+    return null;
   }
+
+  if(error) return null;
+
+  if(loading) return (
+    <StyledContainer justifyContent={'center'} alignItems={'center'}>
+      <Loader />
+    </StyledContainer>
+  )
 
   return (
     <StyledContainer borderRight={'1px solid #ebeef0'}>

@@ -1,0 +1,5 @@
+import styled from 'styled-components';
+
+export const StyledModalWrapperContainer = styled.div`
+    z-index: 100;
+`

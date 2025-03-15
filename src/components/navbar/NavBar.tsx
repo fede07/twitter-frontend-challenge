@@ -18,6 +18,7 @@ import { StyledNavItemsContainer } from './navItem/NavItemsContainer';
 // import {StyledP} from "../common/text";
 import ProfileLogoutPrompt from '../profile-logout/ProfileLogoutPrompt';
 import { useUser } from '../../context/UserContext';
+import {Pencil} from "lucide-react"
 
 const NavBar = () => {
   const location = useLocation();
@@ -78,7 +79,7 @@ const NavBar = () => {
             +
           </StyledTweetButton>
         </StyledNavItemsContainer>
-        <StyledContainer width={'100%'}>
+        <StyledContainer width={'100%'} padding-left={'8px'}>
           <Button
             text={'Tweet'}
             size={'180px'}
@@ -86,7 +87,10 @@ const NavBar = () => {
             onClick={() => {
               setTweetModalOpen(true);
             }}
-          ></Button>
+            resizable={true}
+          >
+            <Pencil/>
+          </Button>
         </StyledContainer>
         <TweetModal
           open={tweetModalOpen}

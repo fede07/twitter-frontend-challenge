@@ -3,6 +3,8 @@ import Icon from "../../../../assets/icon.jpg"
 import {StyledUserMessageContainer} from "../chatrooms-list/UserMessageContainer"
 import {StyledChatRoomsContainer} from "./ChatRoomContainer"
 import {UseGetProfileView} from "../../../../queries/userQueries"
+import {useToast} from "../../../../context/ToastContext"
+import {ToastType} from "../../../../components/toast/Toast"
 
 interface ChatRoomProps {
   userId: string
@@ -15,13 +17,11 @@ export const ChatRoom = ({
 }: ChatRoomProps) => {
 
   const {data: user, error, isLoading} = UseGetProfileView(userId);
-
-  console.log(user);
-  console.log(userId);
+  const {showToast} = useToast();
 
   if(isLoading) return <></>
   if(error) {
-    console.log(error);
+    showToast(error.message, ToastType.ERROR);
   }
 
   if(!user) {

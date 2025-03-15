@@ -11,8 +11,11 @@ import ProfileFeed from '../../components/feed/ProfileFeed';
 import { StyledContainer } from '../../components/common/Container';
 import { StyledH5 } from '../../components/common/text';
 import { UseGetPostsFromProfile } from '../../queries/postQueries';
-import { UseGetProfile, UseGetProfileView } from '../../queries/userQueries';
-import Loader from "../../components/loader/Loader"
+import { UseGetProfileView } from '../../queries/userQueries';
+import { useUser } from '../../context/UserContext';
+import {StyledUserSuggestionContainer} from "../home-page/UserSeuggestionContainer"
+import {SearchBar} from "../../components/search-bar/SearchBar"
+import SuggestionBox from "../home-page/components/suggestionBox/SuggestionBox"
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState<User | null>(null);
@@ -25,7 +28,8 @@ const ProfilePage = () => {
     buttonText: '',
   });
   const service = useHttpRequestService();
-  const [user, setUser] = useState<User>();
+  // const [user, setUser] = useState<User>();
+  const { user } = useUser();
 
   const id = useParams().id;
   const navigate = useNavigate();
@@ -37,20 +41,17 @@ const ProfilePage = () => {
     refetch: refetchGetPostsFromProfile,
     isLoading: isLoadingPostsFromProfile,
   } = UseGetPostsFromProfile(id!, !!id);
-  const {
-    data: profileView,
-    refetch: refetchUserProfileView,
-  } = UseGetProfileView(id!, !!id);
-  const { data: userCache } = UseGetProfile();
+  const { data: profileView, refetch: refetchUserProfileView } =
+    UseGetProfileView(id!, !!id);
 
-  useEffect(() => {
-    handleGetUser().then((r) => setUser(r));
-  }, []);
+  // useEffect(() => {
+  //   handleGetUser().then((r) => setUser(r));
+  // }, []);
 
-  const handleGetUser = async () => {
-    if (userCache) return userCache;
-    return await service.me();
-  };
+  // const handleGetUser = async () => {
+  //   if (userCache) return userCache;
+  //   return await service.me();
+  // };
 
   const handleButtonType = (): { component: ButtonType; text: string } => {
     if (profile?.id === user?.id)
@@ -119,17 +120,17 @@ const ProfilePage = () => {
         setFollowing(
           profilePosts
             ? profilePosts?.followers.some(
-              (follower: User) => follower.id === user?.id
-            )
+                (follower: User) => follower.id === user?.id
+              )
             : false
-        )
+        );
       }
     } catch (e) {
       try {
         if (!profileView) {
           await refetchUserProfileView();
         }
-        if (profileView){
+        if (profileView) {
           setProfile(profileView);
           setFollowing(false);
         }
@@ -137,7 +138,7 @@ const ProfilePage = () => {
         console.log(e);
       }
     }
-  }
+  };
 
   // if (isLoadingPostsFromProfile) {
   //   return <Loader/>
@@ -148,7 +149,7 @@ const ProfilePage = () => {
       <StyledContainer
         maxHeight={'100vh'}
         borderRight={'1px solid #ebeef0'}
-        maxWidth={'600px'}
+        maxWidth={'620px'}
       >
         {profile && (
           <>
@@ -182,6 +183,7 @@ const ProfilePage = () => {
                 <StyledH5>Private account</StyledH5>
               )}
             </StyledContainer>
+
             <Modal
               show={showModal}
               text={modalValues.text}
@@ -201,6 +203,10 @@ const ProfilePage = () => {
           </>
         )}
       </StyledContainer>
+      <StyledUserSuggestionContainer>
+        <SearchBar />
+        <SuggestionBox />
+      </StyledUserSuggestionContainer>
     </>
   );
 };

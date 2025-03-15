@@ -19,10 +19,11 @@ export const StyledToastContainer = styled.div`
   height: 60px;
   min-width: 200px;
   justify-content: center;
+  z-index: 10;
   border-radius: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
 
-    border: 1px solid
+  border: 1px solid
     ${(props: ToastContainerProps) => {
       switch (props.type) {
         case ToastType.ALERT:
@@ -68,16 +69,44 @@ export const StyledToastContainer = styled.div`
       switch (props.type) {
         case ToastType.ALERT:
           return '500';
-          case ToastType.SUCCESS:
-            return 'Bold';
+        case ToastType.SUCCESS:
+          return 'Bold';
       }
     }};
     line-height: 110%; /* 13.2px */
     letter-spacing: -0.12px;
   }
-  transition: 0.3s ease-in-out;
+
+  button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    justify-self: flex-end;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: ${(props: ToastContainerProps) => {
+      switch (props.type) {
+        case ToastType.ALERT:
+          return props.theme.colors.errorContainer;
+        case ToastType.SUCCESS:
+          return props.theme.colors.white;
+        case ToastType.ERROR:
+          return props.theme.colors.errorContainer;
+        default:
+          return props.theme.colors.errorContainer;
+      }
+    }};
+      
+      &:hover {
+          cursor: pointer;
+      }
+  }
+
+    transition: 0.3s ease-in-out;
   &:hover {
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
   }
 `;

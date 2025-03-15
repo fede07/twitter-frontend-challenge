@@ -17,4 +17,8 @@ export const StyledP = styled.p`
   line-height: 110%;
   letter-spacing: -0.15px;
   margin: 0;
+    
+    @media (max-width: 600px) {
+        display: none;
+    }
 `;

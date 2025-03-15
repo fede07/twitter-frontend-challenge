@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useRef } from 'react';
+import {StyledModalWrapperContainer} from "./ModalWrapperContainer"
 
 interface ModalWrapperProps {
   show: boolean;
@@ -31,9 +32,9 @@ const ModalWrapper = ({ show, onClose, children }: ModalWrapperProps) => {
   //I would love to use portals, but unfortunately using it here breaks some of the modals styles
   return (
     <>
-      <div ref={modalRef} className="modal-wrapper">
+      <StyledModalWrapperContainer ref={modalRef} className="modal-wrapper">
         {children}
-      </div>
+      </StyledModalWrapperContainer>
     </>
   );
 };

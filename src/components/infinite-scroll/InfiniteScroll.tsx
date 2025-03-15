@@ -1,5 +1,4 @@
 import React, { useRef, ReactNode, UIEventHandler } from 'react';
-import Loader from "../loader/Loader"
 import {StyledInfiniteScroll} from "./StyledInfiniteScroll"
 
 interface InfiniteScrollProps {
@@ -16,7 +15,6 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
   onLoadMore,
   hasMore,
   loading = false,
-  loader = <Loader/>,
   threshold = 400,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -35,7 +33,6 @@ const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
     <StyledInfiniteScroll>
       <div ref={containerRef} onScroll={handleScroll}>
         {children}
-        {loading && loader}
       </div>
     </StyledInfiniteScroll>
   )

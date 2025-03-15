@@ -29,14 +29,15 @@ export const StyledNavBarContainer = styled.div`
     //     }
     // }
     
-    @media (max-width: 1265px) {
+    @media (max-width: 1024px) {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
         border-right: 1px solid ${props => props.theme.colors.grayscaleContainerLine || '#f0f3f4'};
         margin-left: 2.5%;
-
+        max-width: 120px;
+        min-width: 120px;
     }
 
     @media (max-width: 600px) {
@@ -55,5 +56,6 @@ export const StyledNavBarContainer = styled.div`
         //.profile-info{
         //    display: none;
         //}
+        
     }
 `;

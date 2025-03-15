@@ -29,12 +29,20 @@ const Modal = ({
     <>
       {show &&
         createPortal(
-          <ModalWrapper show={show} onClose={onClose}>
-            <StyledBlurredBackground>
+          <StyledBlurredBackground>
+            <ModalWrapper show={show} onClose={onClose}>
               <StyledModalContainer>
-                <StyledContainer alignItems={'center'} justifyContent={'center'}>
+                <StyledContainer
+                  alignItems={'center'}
+                  justifyContent={'center'}
+                >
                   {img && (
-                    <img src={img} alt={'modal'} width={'32px'} height={'26px'} />
+                    <img
+                      src={img}
+                      alt={'modal'}
+                      width={'32px'}
+                      height={'26px'}
+                    />
                   )}
                   <StyledContainer
                     alignItems={'center'}
@@ -57,10 +65,9 @@ const Modal = ({
                     </StyledContainer>
                   </StyledContainer>
                 </StyledContainer>
-              </StyledModalContainer>
-            </StyledBlurredBackground>
-          </ModalWrapper>
-          ,
+              </StyledModalContainer>{' '}
+            </ModalWrapper>
+          </StyledBlurredBackground>,
           document.body
         )}
     </>

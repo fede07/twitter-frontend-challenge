@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import { ReactNode, MouseEventHandler } from "react";
 import { ButtonType, StyledButton } from "./StyledButton";
 
 interface ButtonProps {
@@ -8,8 +8,10 @@ interface ButtonProps {
   buttonType: ButtonType;
   onClick?: MouseEventHandler;
   disabled?: boolean;
+  resizable?: boolean;
+  children?: ReactNode;
 }
-const Button = ({ text, size, buttonType, onClick, disabled, type }: ButtonProps) => {
+const Button = ({ text, size, buttonType, onClick, disabled, type, resizable, children }: ButtonProps) => {
   return (
     <StyledButton
       size={size}
@@ -17,8 +19,15 @@ const Button = ({ text, size, buttonType, onClick, disabled, type }: ButtonProps
       disabled={buttonType === "DISABLED" || (disabled ? disabled : false)}
       onClick={onClick}
       type={type}
+      resizable={resizable}
     >
-      {text}
+      {children ? (
+        <span>
+              {children ? children : null}
+      </span>
+      ) : null}
+
+      <p>{text}</p>
     </StyledButton>
   );
 };

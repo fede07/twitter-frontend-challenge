@@ -25,6 +25,7 @@ export const StyledContainer = styled(ContainerBase).attrs<ContainerProps>(
         style: props,
     })
 )<ContainerProps>`
+    
   &:hover {
     ${(props) =>
     props.hoverable &&

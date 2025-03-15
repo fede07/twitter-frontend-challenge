@@ -16,5 +16,6 @@ export const StyledNavItemsContainer = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+      margin-left: 60px;
   }
 `;

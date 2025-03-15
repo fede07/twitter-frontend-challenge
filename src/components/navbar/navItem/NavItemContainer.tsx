@@ -15,7 +15,7 @@ export const StyledNavItemContainer = styled.div`
   p {
     color: ${(props) => props.theme.colors.black};
     font-size: 20px;
-    font-family: "Manrope";
+    font-family: "Manrope",serif;
     line-height: 110%;
     letter-spacing: -0.2px;
     text-transform: capitalize;
@@ -28,6 +28,8 @@ export const StyledNavItemContainer = styled.div`
   }
 
   @media (max-width: 1024px) {
+      max-width: 24px;
+      
     p {
       display: none;
     }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { socket } from '../../../../socket';
 import { generateRoomId } from '../../../../util/chat';
-import { UseGetProfile } from '../../../../queries/userQueries';
+import {UseGetProfile ,UseGetProfileView} from '../../../../queries/userQueries';
 import { UseGetChatMessages } from '../../../../queries/chatQueries';
 import Loader from '../../../../components/loader/Loader';
 import { useToast } from '../../../../context/ToastContext';
@@ -17,6 +17,7 @@ import Input from '../../../../components/input/Input';
 import { InputSize } from '../../../../components/input/StyledInput';
 import {ButtonAltSize ,ButtonAltVariant} from "../../../../components/button-alt/StyledButtonAlt"
 import StyledEmptyChat from "./EmptyChat"
+import ProfileInfo from "../../../profile/ProfileInfo"
 
 interface ChatProps {
   chatroomId: string | null;
@@ -34,6 +35,7 @@ export const Chat = ({ chatroomId }: ChatProps) => {
   const { data: user } = UseGetProfile();
   const { showToast } = useToast();
   const chatRef = useRef<HTMLDivElement>(null);
+  const { data: profileView } = UseGetProfileView(chatroomId!)
 
   useEffect(() => {
     setRoomId(generateRoomId(user?.id || '', chatroomId || ''));
@@ -125,8 +127,11 @@ export const Chat = ({ chatroomId }: ChatProps) => {
     )
   }
 
+  console.log(profileView)
+
   return (
     <StyledChatContainer>
+      <ProfileInfo username={profileView.username} name={profileView.name} profilePicture={profileView.profilePicture} />
       <StyledChat ref={chatRef}>
         {isLoadingMessages ? (
           <Loader />
@@ -148,7 +153,11 @@ export const Chat = ({ chatroomId }: ChatProps) => {
           placeholder={'Start Writing!'}
           size={InputSize.SMALL}
         />
-        <ButtonAlt onClick={sendMessage} variant={ButtonAltVariant.DEFAULT} size={ButtonAltSize.SMALL}>
+        <ButtonAlt
+          onClick={sendMessage}
+          variant={ButtonAltVariant.DEFAULT}
+          size={ButtonAltSize.SMALL}
+        >
           <SendHorizontal />
         </ButtonAlt>
       </StyledChatInputContainer>

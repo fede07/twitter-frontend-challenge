@@ -5,4 +5,5 @@ export const StyledChatContainer = styled.div`
     flex-direction: column;
     height:98%;
     margin: 16px;
+    min-width: 500px;
 `
