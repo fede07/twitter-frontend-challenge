@@ -40,3 +40,13 @@ export function UseGetRecommendedUsers(limit: number, page: number, enabled: boo
     enabled: enabled,
   })
 }
+
+export function UseGetMutualFollows(enabled: boolean = true) {
+  const service = useHttpRequestService();
+  return useQuery({
+    queryKey: ['mutual-follows'],
+    queryFn: async () => await service.getMutualFollows(),
+    staleTime: 10 * 6 * 1000,
+    enabled: enabled,
+  })
+}

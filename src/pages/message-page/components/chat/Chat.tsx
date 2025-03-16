@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { socket } from '../../../../socket';
 import { generateRoomId } from '../../../../util/chat';
-import {UseGetMyProfile ,UseGetProfileView} from '../../../../queries/userQueries';
+import {
+  UseGetMyProfile,
+  UseGetProfileView,
+} from '../../../../queries/userQueries';
 import { UseGetChatMessages } from '../../../../queries/chatQueries';
 import Loader from '../../../../components/loader/Loader';
 import { useToast } from '../../../../context/ToastContext';
@@ -15,9 +18,12 @@ import { StyledChat } from './StyledChat';
 import { StyledChatContainer } from './ChatContainer';
 import Input from '../../../../components/input/Input';
 import { InputSize } from '../../../../components/input/StyledInput';
-import {ButtonAltSize ,ButtonAltVariant} from "../../../../components/button-alt/StyledButtonAlt"
-import StyledEmptyChat from "./EmptyChat"
-import ProfileInfo from "../../../profile/ProfileInfo"
+import {
+  ButtonAltSize,
+  ButtonAltVariant,
+} from '../../../../components/button-alt/StyledButtonAlt';
+import StyledEmptyChat from './EmptyChat';
+import ProfileInfo from '../../../profile/ProfileInfo';
 
 interface ChatProps {
   chatroomId: string | null;
@@ -35,10 +41,10 @@ export const Chat = ({ chatroomId }: ChatProps) => {
   const { data: user } = UseGetMyProfile();
   const { showToast } = useToast();
   const chatRef = useRef<HTMLDivElement>(null);
-  const { data: profileView } = UseGetProfileView(chatroomId!)
+  const { data: profileView } = UseGetProfileView(chatroomId!);
 
-  if(!chatroomId) {
-    console.log("chatroomId is null");
+  if (!chatroomId) {
+    console.log('chatroomId is null');
   }
 
   useEffect(() => {
@@ -59,21 +65,22 @@ export const Chat = ({ chatroomId }: ChatProps) => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
-  }
+  };
 
   useEffect(() => {
     scrollToBottom();
-  } ,[messages]);
+  }, [messages]);
 
   useEffect(() => {
     if (history && !isLoadingMessages) {
-      setMessages(
-        history.map((msg: Message) => ({
+      console.log('history', history);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        ...history.map((msg: Message) => ({
           text: msg.text,
           senderId: msg.senderId,
-        }))
-      );
-      console.log(history);
+        })),
+      ]);
     }
   }, [history, isLoadingMessages]);
 
@@ -85,28 +92,19 @@ export const Chat = ({ chatroomId }: ChatProps) => {
     }
 
     socket.once('connect', () => {
-      console.log('Socket connected');
       socket.emit('join-chat', { recipientId: chatroomId });
     })
-
-    socket.emit('join-chat', { recipientId: chatroomId });
-
-    socket.on('joined-chat', () => {
-    });
-
-    socket.on('chat-message', (message: Message) => {
-      if(!message.text || message.text.trim() === '') return;
-      setMessages((prevMessages) => [...prevMessages, message]);
-      socket.emit('chat-message', { roomId: chatroomId, message });
-    });
 
     socket.on('error', (err) => {
       showToast(err.message, ToastType.ALERT);
     });
 
+    socket.on('new-message', handleChatMessage);
+
     return () => {
       socket.emit('leaveChatroom', chatroomId);
       socket.off('chat-message');
+      socket.off('new-message');
       socket.disconnect();
     };
   }, [chatroomId]);
@@ -115,9 +113,29 @@ export const Chat = ({ chatroomId }: ChatProps) => {
     if (input.trim() === '' || !chatroomId) {
       return;
     }
-    socket.emit('chat-message', { roomId, message: input });
-    setMessages((prevMessages) => [...prevMessages, { text: input, senderId: user?.id || '' }])
+    socket.emit('chat-message', { roomId, message: input }, (ack: { success: boolean }) => {
+      if (ack?.success) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: input, senderId: user?.id },
+        ]);
+        setInput('');
+      } else {
+        showToast('Failed to send message', ToastType.ALERT);
+        setInput('');
+      }
+    })
     setInput('');
+    scrollToBottom();
+  };
+
+
+  const handleChatMessage = (message: Message) => {
+    console.log('message:', message);
+    if (!message || message.text.trim() === '') return;
+    if(message.senderId === user?.id) return;
+    setMessages((prevMessages) => [...prevMessages, message]);
+    scrollToBottom();
   };
 
   // TODO: Implement "New Message" Button
@@ -126,27 +144,36 @@ export const Chat = ({ chatroomId }: ChatProps) => {
     return (
       <StyledEmptyChat>
         <h2>Select a Message</h2>
-        <p>Choose from your existing conversations, start a new one, or just keep swimming.</p>
+        <p>
+          Choose from your existing conversations, start a new one, or just keep
+          swimming.
+        </p>
       </StyledEmptyChat>
-    )
+    );
   }
-
-  console.log(profileView)
-
   return (
     <StyledChatContainer>
-      <ProfileInfo username={profileView.username} name={profileView.name} profilePicture={profileView.profilePicture} />
+      <ProfileInfo
+        username={profileView.username}
+        name={profileView.name}
+        profilePicture={profileView.profilePicture}
+      />
       <StyledChat ref={chatRef}>
         {isLoadingMessages ? (
           <Loader />
         ) : (
-          messages.map((msg, index) => (
-            <StyledMessageContainer>
-              <StyledMessage key={index} isUser={user?.id === msg.senderId}>
-                {msg.text}
-              </StyledMessage>
-            </StyledMessageContainer>
-          ))
+          messages.map((msg, index) => {
+            if (msg.senderId && msg.senderId !== '') {
+              return (
+                <StyledMessageContainer key={index}>
+                  <StyledMessage key={index} isUser={user?.id === msg.senderId}>
+                    {msg.text}
+                  </StyledMessage>
+                </StyledMessageContainer>
+              );
+            }
+            return null;
+          })
         )}
       </StyledChat>
       <StyledChatInputContainer>

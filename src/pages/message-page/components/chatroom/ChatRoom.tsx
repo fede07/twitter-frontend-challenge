@@ -1,5 +1,4 @@
 import Avatar from "../../../../components/common/avatar/Avatar"
-import Icon from "../../../../assets/icon.jpg"
 import {StyledUserMessageContainer} from "../chatrooms-list/UserMessageContainer"
 import {StyledChatRoomsContainer} from "./ChatRoomContainer"
 import {UseGetProfileView} from "../../../../queries/userQueries"
@@ -36,7 +35,7 @@ export const ChatRoom = ({
   return(
     <StyledChatRoomsContainer onClick={() => onSelectedChatroom(userId)}>
       <Avatar
-        src={user.profilePicture === null ? Icon : user.profilePicture!}
+        src={user.profilePicture}
         height={"75px"}
         width={"75px"}
         alt={user.username}
