@@ -7,6 +7,7 @@ export const StyledChatRoomsContainer = styled.div`
   gap: 16px;
   padding: 16px;
   cursor: pointer;
+    width: 90%;
 
   &:hover {
     background-color: #f0f3f4;

@@ -12,7 +12,7 @@ import { ToastType } from '../../../../components/toast/Toast';
 import { StyledMessage } from './StyledMessage';
 import { StyledMessageContainer } from './MessageContainer';
 import ButtonAlt from '../../../../components/button-alt/ButtonAlt';
-import { SendHorizontal } from 'lucide-react';
+import { SendHorizontal, Undo2 } from 'lucide-react';
 import { StyledChatInputContainer } from './ChatInputContainer';
 import { StyledChat } from './StyledChat';
 import { StyledChatContainer } from './ChatContainer';
@@ -24,9 +24,13 @@ import {
 } from '../../../../components/button-alt/StyledButtonAlt';
 import StyledEmptyChat from './EmptyChat';
 import ProfileInfo from '../../../profile/ProfileInfo';
+import { StyledChatTopContainer } from './ChatTopContainer';
+import {StyledHiderWrapper} from "../HiderWrapper"
 
 interface ChatProps {
   chatroomId: string | null;
+  back?: () => void;
+  isHidden?: boolean;
 }
 
 interface Message {
@@ -34,7 +38,7 @@ interface Message {
   senderId: string;
 }
 
-export const Chat = ({ chatroomId }: ChatProps) => {
+export const Chat = ({ chatroomId, back, isHidden = false }: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [roomId, setRoomId] = useState<string | null>(null);
@@ -42,6 +46,7 @@ export const Chat = ({ chatroomId }: ChatProps) => {
   const { showToast } = useToast();
   const chatRef = useRef<HTMLDivElement>(null);
   const { data: profileView } = UseGetProfileView(chatroomId!);
+
 
   if (!chatroomId) {
     console.log('chatroomId is null');
@@ -73,7 +78,6 @@ export const Chat = ({ chatroomId }: ChatProps) => {
 
   useEffect(() => {
     if (history && !isLoadingMessages) {
-      console.log('history', history);
       setMessages((prevMessages) => [
         ...prevMessages,
         ...history.map((msg: Message) => ({
@@ -93,7 +97,7 @@ export const Chat = ({ chatroomId }: ChatProps) => {
 
     socket.once('connect', () => {
       socket.emit('join-chat', { recipientId: chatroomId });
-    })
+    });
 
     socket.on('error', (err) => {
       showToast(err.message, ToastType.ALERT);
@@ -113,51 +117,79 @@ export const Chat = ({ chatroomId }: ChatProps) => {
     if (input.trim() === '' || !chatroomId) {
       return;
     }
-    socket.emit('chat-message', { roomId, message: input }, (ack: { success: boolean }) => {
-      if (ack?.success) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { text: input, senderId: user?.id },
-        ]);
-        setInput('');
-      } else {
-        showToast('Failed to send message', ToastType.ALERT);
-        setInput('');
+    socket.emit(
+      'chat-message',
+      { roomId, message: input },
+      (ack: { success: boolean }) => {
+        if (ack?.success) {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { text: input, senderId: user?.id },
+          ]);
+          setInput('');
+        } else {
+          showToast('Failed to send message', ToastType.ALERT);
+          setInput('');
+        }
       }
-    })
+    );
     setInput('');
     scrollToBottom();
   };
 
-
   const handleChatMessage = (message: Message) => {
-    console.log('message:', message);
     if (!message || message.text.trim() === '') return;
-    if(message.senderId === user?.id) return;
+    if (message.senderId === user?.id) return;
     setMessages((prevMessages) => [...prevMessages, message]);
     scrollToBottom();
   };
 
-  // TODO: Implement "New Message" Button
   // TODO: Add Translation
   if (!chatroomId) {
     return (
       <StyledEmptyChat>
-        <h2>Select a Message</h2>
-        <p>
-          Choose from your existing conversations, start a new one, or just keep
-          swimming.
-        </p>
+        <ButtonAlt
+          variant={ButtonAltVariant.DEFAULT}
+          size={ButtonAltSize.SMALL}
+          onClick={back}
+        >
+          <Undo2 />
+        </ButtonAlt>
+        <div>
+          <h2>Select a Message</h2>
+          <p>
+            Choose from your existing conversations, start a new one, or just
+            keep swimming.
+          </p>
+        </div>
       </StyledEmptyChat>
     );
   }
+
+  // if(isHidden) {
+  //   return null
+  // }
+
   return (
-    <StyledChatContainer>
-      <ProfileInfo
-        username={profileView.username}
-        name={profileView.name}
-        profilePicture={profileView.profilePicture}
-      />
+    <StyledChatContainer isHidden={isHidden}>
+      <StyledChatTopContainer>
+        <StyledHiderWrapper isHidden={!isHidden} >
+          <ButtonAlt
+            variant={ButtonAltVariant.DEFAULT}
+            size={ButtonAltSize.SMALL}
+            onClick={back}
+          >
+            <Undo2 />
+          </ButtonAlt>
+        </StyledHiderWrapper>
+
+        <ProfileInfo
+          username={profileView.username}
+          name={profileView.name}
+          profilePicture={profileView.profilePicture}
+        />
+      </StyledChatTopContainer>
+
       <StyledChat ref={chatRef}>
         {isLoadingMessages ? (
           <Loader />

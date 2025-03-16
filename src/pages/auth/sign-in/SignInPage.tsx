@@ -59,13 +59,14 @@ const SignInPage = () => {
       try {
         const response = await httpRequestService.signIn(requestData);
         if (response) {
+          showToast('Logged in', ToastType.SUCCESS);
           navigate('/');
         } else {
           setError(true);
         }
       } catch (e) {
         if (e instanceof Error) {
-          showToast(e.message, ToastType.ALERT);
+          setError(true);
         } else {
           showToast('An unknown error occurred', ToastType.ALERT);
         }
@@ -86,8 +87,8 @@ const SignInPage = () => {
               <LabeledInput
                 id={'email'}
                 required
-                placeholder={'Enter user...'}
-                title={t('input-params.username')}
+                placeholder={'Enter email...'}
+                title={t('input-params.email')}
                 error={!!formik.errors.email && !!formik.touched.email}
                 errorText={formik.errors.email}
                 {...formik.getFieldProps('email')}

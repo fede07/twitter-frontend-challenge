@@ -36,7 +36,9 @@ export const StyledNavBarContainer = styled.div`
         gap: 16px;
         border-right: 1px solid ${props => props.theme.colors.grayscaleContainerLine || '#f0f3f4'};
         margin-left: 2.5%;
-        min-width: 120px;
+        min-width: 100px;
+        max-width: 100px;
+
     }
 
     @media (max-width: 600px) {
@@ -51,6 +53,7 @@ export const StyledNavBarContainer = styled.div`
         justify-content: center;
         padding: 0;
         margin-left: 0;
+        max-width: 100%;
         
         //.profile-info{
         //    display: none;

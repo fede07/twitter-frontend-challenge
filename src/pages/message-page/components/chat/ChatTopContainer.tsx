@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-export const StyledMessagePageContainer = styled.div`
+export const StyledChatTopContainer = styled.div`
     display: flex;
+    flex-direction: row;
     max-width: 100%;
-    width: 100%;
 `

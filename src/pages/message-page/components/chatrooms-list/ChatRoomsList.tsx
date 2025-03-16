@@ -9,12 +9,14 @@ import { StyledChatRoomsListHeader } from './ChatRoomsListHeader';
 import { useToast } from '../../../../context/ToastContext';
 import { ToastType } from '../../../../components/toast/Toast';
 import { useEffect, useState } from 'react';
+import {StyledEmptyChatListContainer} from "./EmptyChatListContainer"
 
 interface ChatRoomsListProps {
   onSelectedChatroom: (chatroom: string) => void;
+  isHidden?: boolean;
 }
 
-const ChatRoomsList = ({ onSelectedChatroom }: ChatRoomsListProps) => {
+const ChatRoomsList = ({ onSelectedChatroom, isHidden }: ChatRoomsListProps) => {
   // const currentUser = useUser();
   const {
     data: chatrooms,
@@ -25,7 +27,7 @@ const ChatRoomsList = ({ onSelectedChatroom }: ChatRoomsListProps) => {
   const { data: mutualFollows, isLoading: isLoadingMutual } =
     UseGetMutualFollows();
   const [isLoading, setIsLoading] = useState(true);
-  const [empty, setEmpty] = useState(false);
+  const [empty, setEmpty] = useState(true);
   const { showToast } = useToast();
   const [newChatrooms, setNewChatrooms] = useState<string[]>([]);
 
@@ -40,18 +42,17 @@ const ChatRoomsList = ({ onSelectedChatroom }: ChatRoomsListProps) => {
   useEffect(() => {
     if (!isLoading && chatrooms.length === 0) {
       setEmpty(true);
-      console.log('chatrooms', chatrooms);
     } else {
       setEmpty(false);
     }
-  }, [chatrooms]);
+  }, [chatrooms, isLoading]);
 
   useEffect(() => {
     if (mutualFollows && chatrooms) {
       setNewChatrooms(
         mutualFollows.filter((id: string) => !chatrooms.includes(id))
       );
-      setEmpty(newChatrooms.length !== 0);
+      setEmpty(false);
     }
   }, [mutualFollows, chatrooms]);
 
@@ -66,17 +67,21 @@ const ChatRoomsList = ({ onSelectedChatroom }: ChatRoomsListProps) => {
     return <Loader />;
   }
 
+  // if (isHidden) {
+  //   return null;
+  // }
+
   return (
-    <StyledChatRoomsListContainer>
+    <StyledChatRoomsListContainer isHidden={isHidden} >
       <StyledChatRoomsListHeader>Messages</StyledChatRoomsListHeader>
       {empty ? (
-        <>
-          <p>Welcome to your inbox!</p>
+        <StyledEmptyChatListContainer>
+          <h2>Welcome to your inbox!</h2>
           <p>
             When you follow people and they follow you back, they will appear in
             this list.
           </p>
-        </>
+        </StyledEmptyChatListContainer>
       ) : (
         chatrooms.map((id: string) => (
           <ChatRoom

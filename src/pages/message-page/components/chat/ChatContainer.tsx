@@ -1,9 +1,15 @@
 import styled from 'styled-components';
 
-export const StyledChatContainer = styled.div`
+export const StyledChatContainer = styled.div<{isHidden?: boolean}>`
     display: flex;
     flex-direction: column;
     height:98%;
     margin: 16px;
-    min-width: 500px;
+    width: 100%;
+    min-width: 400px;
+
+    @media (max-width: 800px) {
+        display: ${(props) => props.isHidden ? 'none' : 'block'};
+        height: 75%;
+    }
 `
