@@ -12,7 +12,6 @@ import DeletePostModal from './delete-post-modal/DeletePostModal';
 import ImageContainer from './tweet-image/ImageContainer';
 import CommentModal from '../comment/comment-modal/CommentModal';
 import { useNavigate } from 'react-router-dom';
-import { UseGetPostById } from '../../queries/postQueries';
 import { S3Service } from '../../service/S3Service';
 
 interface TweetProps {
@@ -37,20 +36,23 @@ const Tweet = ({post, user}: TweetProps) => {
     : [];
 
   const handleReaction = async (type: string) => {
-    if (!actualPost.reactions) {
-      actualPost.reactions = [];
-    }
-
+    // console.log(type);
+    // console.log(actualPost.reactions[0].userId);
+    // console.log(actualPost.reactions[0].type)
+    // console.log("Mi usuario: ", user?.id);
+    // console.log("usuario = reactuser", actualPost.reactions[0].userId === user?.id);
+    // console.log("tipo = reacttipo", actualPost.reactions[0].type === type);
     const reacted = actualPost.reactions.find(
       (r) => r.type === type && r.userId === user?.id
     );
+    console.log(reacted);
     if (reacted) {
       await service.deleteReaction(reacted.id);
     } else {
       await service.createReaction(actualPost.id, type);
     }
-    // const newPost = await service.getPostById(post.id);
-    const newPost = UseGetPostById(post.id).data;
+     const newPost = await service.getPostById(post.id);
+   // const newPost = UseGetPostById(post.id).data;
     setActualPost(newPost);
   };
 

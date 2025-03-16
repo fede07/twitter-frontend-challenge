@@ -1,9 +1,10 @@
-import styled from "styled-components";
-import { Theme } from "../../../util/LightTheme";
+import styled from 'styled-components';
+import { Theme } from '../../../util/LightTheme';
 
 interface PProps {
   primary: boolean;
   theme: Theme;
+  hidden?: boolean;
 }
 
 export const StyledP = styled.p`
@@ -17,8 +18,10 @@ export const StyledP = styled.p`
   line-height: 110%;
   letter-spacing: -0.15px;
   margin: 0;
+    display: flex;
     
-    @media (max-width: 600px) {
-        display: none;
-    }
+    @media (max-width: 1024px) {
+        ${(props: PProps) => {
+          return props.hidden ? 'display: none;' : '';
+        }}
 `;

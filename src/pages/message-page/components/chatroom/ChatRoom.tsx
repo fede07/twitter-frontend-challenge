@@ -19,13 +19,17 @@ export const ChatRoom = ({
   const {data: user, error, isLoading} = UseGetProfileView(userId);
   const {showToast} = useToast();
 
-  if(isLoading) return <></>
+  if(isLoading) return null
   if(error) {
     showToast(error.message, ToastType.ERROR);
   }
 
   if(!user) {
     console.log("user not found");
+  }
+
+  if(!userId) {
+    console.log("user id not found");
   }
 
 

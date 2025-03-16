@@ -75,8 +75,8 @@ const ProfileLogoutPrompt = ({
         )}
       </StyledProfileLogoutPromptContainer>
       <StyledContainer padding={'4px 0'} gap={'4px'} className={'user-info'}>
-        <StyledP primary>{user?.name}</StyledP>
-        <StyledP primary={false}>{`@${user?.username}`}</StyledP>
+        <StyledP primary hidden={true}>{user?.name}</StyledP>
+        <StyledP primary={false} hidden={true}>{`@${user?.username}`}</StyledP>
       </StyledContainer>
     </StyledContainer>
   );

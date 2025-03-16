@@ -65,4 +65,12 @@ export function UseGetPostById(id: string, enabled: boolean = true) {
   })
 }
 
-
+export function UseIsReacted(id: string, reaction: string, enabled: boolean = true) {
+  const service = useHttpRequestService()
+  return useQuery({
+    queryKey: ["reactions", id],
+    queryFn: async () => await service.isReacted(id, reaction),
+    staleTime: 10 * 6 * 1000,
+    enabled: enabled,
+  })
+}

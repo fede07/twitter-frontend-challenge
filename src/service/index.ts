@@ -35,11 +35,11 @@ export interface Post {
 export interface Reaction {
   id: string;
   type: string;
-  createdAt: Date;
+  //createdAt: Date;
   userId: string;
   postId: string;
-  updatedAt: Date;
-  deletedAt?: Date;
+  //updatedAt: Date;
+  //deletedAt?: Date;
 }
 export interface Author {
   id: string;

@@ -103,6 +103,16 @@ const httpRequestService = {
       return res.data;
     }
   },
+  isReacted: async (postId: string, reaction: string) => {
+    const res = await apiClient.get(`${url}/reaction/${postId}`, {
+      params: {
+        type: reaction,
+      },
+    });
+    if (res.status === 200) {
+      return res.data;
+    }
+  },
   deleteReaction: async (reactionId: string) => {
     const res = await apiClient.delete(`${url}/reaction/${reactionId}`);
     if (res.status === 200) {

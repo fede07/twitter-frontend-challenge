@@ -37,6 +37,10 @@ export const Chat = ({ chatroomId }: ChatProps) => {
   const chatRef = useRef<HTMLDivElement>(null);
   const { data: profileView } = UseGetProfileView(chatroomId!)
 
+  if(!chatroomId) {
+    console.log("chatroomId is null");
+  }
+
   useEffect(() => {
     setRoomId(generateRoomId(user?.id || '', chatroomId || ''));
   }, [user, chatroomId]);

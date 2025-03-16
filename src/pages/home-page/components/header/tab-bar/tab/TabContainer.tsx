@@ -19,7 +19,7 @@ export const StyledTabContainer = styled.div`
     color: ${(props) => props.theme.colors.black};
     /* Body-1 */
     font-size: 15px;
-    font-family: Manrope;
+    font-family: Manrope,serif;
     line-height: 110%;
     letter-spacing: -0.15px;
   }

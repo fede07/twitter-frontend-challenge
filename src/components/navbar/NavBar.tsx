@@ -80,7 +80,7 @@ const NavBar = () => {
             +
           </StyledTweetButton>
         </StyledNavItemsContainer>
-        <StyledContainer width={'100%'} padding-left={'8px'}>
+        <StyledContainer width={'100%'} paddingLeft={'8px'}>
           <Button
             text={'Tweet'}
             size={'180px'}
