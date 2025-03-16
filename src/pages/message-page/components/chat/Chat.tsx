@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { socket } from '../../../../socket';
 import { generateRoomId } from '../../../../util/chat';
-import {UseGetProfile ,UseGetProfileView} from '../../../../queries/userQueries';
+import {UseGetMyProfile ,UseGetProfileView} from '../../../../queries/userQueries';
 import { UseGetChatMessages } from '../../../../queries/chatQueries';
 import Loader from '../../../../components/loader/Loader';
 import { useToast } from '../../../../context/ToastContext';
@@ -32,7 +32,7 @@ export const Chat = ({ chatroomId }: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [roomId, setRoomId] = useState<string | null>(null);
-  const { data: user } = UseGetProfile();
+  const { data: user } = UseGetMyProfile();
   const { showToast } = useToast();
   const chatRef = useRef<HTMLDivElement>(null);
   const { data: profileView } = UseGetProfileView(chatroomId!)

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useHttpRequestService } from "../service/HttpRequestService";
 import { Author } from "../service";
+import {UseGetRecommendedUsers} from "../queries/userQueries"
 
 interface UseGetRecommendationsProps {
   page: number;
@@ -8,39 +8,60 @@ interface UseGetRecommendationsProps {
 
 export const useGetRecommendations = ({ page }: UseGetRecommendationsProps) => {
   const [users, setUsers] = useState<Author[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(false);
   const [hasMore, setHasMore] = useState(true); // Nuevo estado para verificar si hay más elementos
-  const service = useHttpRequestService();
+  // const service = useHttpRequestService();
 
-  const getUsers = async () => {
-    return await service.getRecommendedUsers(10, page);
-  };
+  const {data: recommendedUsers, isLoading, error: errorFetch} = UseGetRecommendedUsers(10, page, true)
 
   useEffect(() => {
-    if (page !== undefined && hasMore) {
-      setLoading(true);
-      getUsers()
-        .then((response) => {
-          if (response.length === 0) {
-            setHasMore(false);
-          } else {
-            setUsers((prev) => {
-              const uniqueIds = new Set(prev.map((user) => user.id));
-              const filteredUsers = response.filter(
-                (user: Author) => !uniqueIds.has(user.id)
-              );
-              return [...prev, ...filteredUsers];
-            });
-          }
-          setLoading(false);
+    if(recommendedUsers?.length !== undefined) {
+      if(recommendedUsers.length === 0) {
+        setHasMore(false)
+      } else {
+        setUsers((prev) => {
+          const uniqueIds = new Set(prev.map((user) => user.id));
+          const filteredUsers = recommendedUsers.filter(
+            (user: Author) => !uniqueIds.has(user.id)
+          );
+          return [...prev, ...filteredUsers];
         })
-        .catch((e) => {
-          setError(e);
-          setLoading(false);
-        });
+      }
     }
-  }, [page, hasMore]);
+  } ,[recommendedUsers]);
 
-  return { users, loading, error };
+  return { users, loading: isLoading, error: errorFetch, hasMore}
+
+  // const getUsers = async () => {
+  //   // return await service.getRecommendedUsers(10, page);
+  //   await refetch()
+  // };
+  //
+  // useEffect(() => {
+  //   if (page !== undefined && hasMore) {
+  //     setLoading(true);
+  //     getUsers()
+  //       .then((response) => {
+  //         if (response.length === 0) {
+  //           setHasMore(false);
+  //         } else {
+  //           setUsers((prev) => {
+  //             const uniqueIds = new Set(prev.map((user) => user.id));
+  //             const filteredUsers = response.filter(
+  //               (user: Author) => !uniqueIds.has(user.id)
+  //             );
+  //             return [...prev, ...filteredUsers];
+  //           });
+  //         }
+  //         setLoading(false);
+  //       })
+  //       .catch((e) => {
+  //         setError(e);
+  //         setLoading(false);
+  //       });
+  //   }
+  // }, [page, hasMore]);
+
+  // return { users, loading, error };
 };

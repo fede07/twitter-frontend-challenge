@@ -9,7 +9,7 @@ import { StyledP } from '../common/text';
 import { StyledContainer } from '../common/Container';
 import { useUser } from '../../context/UserContext';
 import { S3Service } from '../../service/S3Service';
-import ModalWrapper from '../modal-wrapper/ModalWrapper';
+// import ModalWrapper from '../modal-wrapper/ModalWrapper';
 
 interface ProfileLogoutPromptProps {
   margin: string;
@@ -68,9 +68,9 @@ const ProfileLogoutPrompt = ({
               margin={margin}
               onClick={(event) => handleButtonClick(event)}
             >
-              <ModalWrapper show={logoutOpen} onClose={handleLogout}>
+              {/*<ModalWrapper show={logoutOpen} onClose={handleLogout}>*/}
                 <LogoutPrompt show={logoutOpen} />
-              </ModalWrapper>
+              {/*</ModalWrapper>*/}
             </StyledLogoutPrompt>
         )}
       </StyledProfileLogoutPromptContainer>

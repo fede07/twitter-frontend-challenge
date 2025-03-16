@@ -7,7 +7,7 @@ export const StyledChatRoomsListContainer = styled.div`
     border-right: 1px solid #e6e6e6;
     padding: 16px;
     min-width: 200px;
-    max-width: 400px;
+    max-width: 600px;
     width: 100%;
     text-align: left;
     

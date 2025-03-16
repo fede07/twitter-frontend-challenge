@@ -3,7 +3,7 @@ import ProfileInfo from './ProfileInfo';
 import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../../components/modal/Modal';
 import { useTranslation } from 'react-i18next';
-import { User } from '../../service';
+import {Follow ,User} from '../../service';
 import { ButtonType } from '../../components/button/StyledButton';
 import { useHttpRequestService } from '../../service/HttpRequestService';
 import Button from '../../components/button/Button';
@@ -75,10 +75,20 @@ const ProfilePage = () => {
       service.unfollowUser(profile!.id).then(async () => {
         setFollowing(false);
         setShowModal(false);
-        await getProfileData();
+        await refetchUserProfileView();
       });
     }
   };
+
+  useEffect(() => {
+    if (profileView) {
+      setProfile(profileView);
+      const isFollowing: boolean = profileView.followers.some(
+        (follower: Follow) => follower.followerId === user?.id
+      );
+      setFollowing(isFollowing);
+    }
+  }, [profileView, user]);
 
   useEffect(() => {
     if (profilePosts && !isLoadingPostsFromProfile) {
@@ -108,7 +118,9 @@ const ProfilePage = () => {
         });
       } else {
         await service.followUser(id);
-        await service.getProfile(id).then((res) => setProfile(res));
+        // await service.getProfile(id).then((res) => setProfile(res));
+        await refetchUserProfileView()
+        setFollowing(true);
       }
       return await getProfileData();
     }
@@ -120,13 +132,9 @@ const ProfilePage = () => {
         await refetchGetPostsFromProfile();
       }
       if (profilePosts && !isLoadingPostsFromProfile) {
-        setProfile(profilePosts);
+        setProfile(profileView);
         setFollowing(
-          profilePosts
-            ? profilePosts?.followers.some(
-                (follower: User) => follower.id === user?.id
-              )
-            : false
+          profileView?.followers?.some((follower: Follow) => follower.followerId === user?.id) ?? false
         );
       }
     } catch (e) {
@@ -148,9 +156,6 @@ const ProfilePage = () => {
     }
   };
 
-  // if (isLoadingPostsFromProfile) {
-  //   return <Loader/>
-  // }
   return (
     <>
       <StyledContainer

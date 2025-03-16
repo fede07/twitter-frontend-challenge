@@ -94,3 +94,11 @@ export interface Chatroom {
   createdAt: string;
 }
 
+export interface Follow {
+  id: string;
+  followerId: string;
+  followedId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+}

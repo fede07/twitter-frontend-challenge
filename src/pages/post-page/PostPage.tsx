@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Post } from '../../service';
-import { UseGetProfile } from '../../queries/userQueries';
+import { UseGetMyProfile } from '../../queries/userQueries';
 import { UseGetPostById } from '../../queries/postQueries';
 import Loader from '../../components/loader/Loader';
 import { StyledContainer } from '../../components/common/Container';
@@ -32,7 +32,7 @@ const PostPage = () => {
     isLoading: isLoadingUser,
     error: errorUser,
     isError: isErrorUser,
-  } = UseGetProfile();
+  } = UseGetMyProfile();
 
   const {
     data: post_,

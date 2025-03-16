@@ -3,7 +3,7 @@ import { Post } from "../../service";
 import { StyledContainer } from "../common/Container";
 import Tweet from "../tweet/Tweet";
 import Loader from "../loader/Loader";
-import {UseGetProfile} from "../../queries/userQueries"
+import {UseGetMyProfile} from "../../queries/userQueries"
 
 interface FeedProps {
   posts: Post[];
@@ -11,7 +11,7 @@ interface FeedProps {
 }
 
 const Feed = ({ posts, loading }: FeedProps) => {
-  const {data: user} = UseGetProfile()
+  const {data: user} = UseGetMyProfile()
   if (!posts) {
     return <StyledContainer width={"100%"} alignItems={"center"}>No posts yet!</StyledContainer>
   }

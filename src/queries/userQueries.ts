@@ -1,7 +1,7 @@
 import { useHttpRequestService } from '../service/HttpRequestService';
 import { useQuery} from '@tanstack/react-query';
 
-export function UseGetProfile(enabled: boolean = true) {
+export function UseGetMyProfile(enabled: boolean = true) {
   const service = useHttpRequestService();
   return useQuery({
     queryKey: ['profile'],
