@@ -90,7 +90,6 @@ const httpRequestService = {
   getPostById: async (id: string) => {
     const res = await apiClient.get(`${url}/post/${id}`);
     if (res.status === 200) {
-      console.log(res.data);
       return res.data;
     }
   },

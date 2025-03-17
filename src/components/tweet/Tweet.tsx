@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React ,{useEffect ,useState} from 'react';
 import { StyledTweetContainer } from './TweetContainer';
 import AuthorData from './user-post-data/AuthorData';
 import type { Post, User } from '../../service';
@@ -27,25 +27,31 @@ const Tweet = ({post, user}: TweetProps) => {
   const service = useHttpRequestService();
   const navigate = useNavigate();
   const s3 = S3Service;
+  const [comments, setComments] = useState<number>(post.qtyComments);
+
   // const getCountByType = (type: string): number => {
   //   return actualPost?.reactions?.filter((r) => r.type === type).length ?? 0;
   // };
+
+  useEffect(() => {
+    fetchPost().then(r => {});
+  } ,[]);
 
   const imagesUrls = post.images?.length
     ? post.images?.map((image: string) => s3.getPublicUrl(image))
     : [];
 
+  const fetchPost = async () => {
+    const updatedPost = await service.getPostById(post.id);
+    setActualPost(updatedPost);
+    setComments(updatedPost.qtyComments);
+  }
+
   const handleReaction = async (type: string) => {
-    // console.log(type);
-    // console.log(actualPost.reactions[0].userId);
-    // console.log(actualPost.reactions[0].type)
-    // console.log("Mi usuario: ", user?.id);
-    // console.log("usuario = reactuser", actualPost.reactions[0].userId === user?.id);
-    // console.log("tipo = reacttipo", actualPost.reactions[0].type === type);
+
     const reacted = actualPost.reactions.find(
       (r) => r.type === type && r.userId === user?.id
     );
-    console.log(reacted);
     if (reacted) {
       await service.deleteReaction(reacted.id);
     } else {
@@ -53,8 +59,17 @@ const Tweet = ({post, user}: TweetProps) => {
     }
      const newPost = await service.getPostById(post.id);
    // const newPost = UseGetPostById(post.id).data;
-    setActualPost(newPost);
+     setActualPost(newPost);
   };
+
+  const handleComment = async () => {
+    if(window.innerWidth > 600) {
+      setShowCommentModal(true);
+      await fetchPost();
+    } else {
+      navigate(`/compose/comment/${post.id}`);
+    }
+  }
 
   const hasReactedByType = (type: string): boolean => {
     if (!actualPost.reactions) {
@@ -110,14 +125,11 @@ const Tweet = ({post, user}: TweetProps) => {
       <StyledReactionsContainer>
         <Reaction
           img={IconType.CHAT}
-          count={actualPost?.qtyComments ?? 0}
-          reactionFunction={() =>
-            window.innerWidth > 600
-              ? setShowCommentModal(true)
-              : navigate(`/compose/comment/${post.id}`)
-          }
+          count={comments}
+          reactionFunction={handleComment}
           increment={0}
           reacted={false}
+          incrementEnabled={false}
         />
         <Reaction
           img={IconType.RETWEET}
@@ -137,7 +149,7 @@ const Tweet = ({post, user}: TweetProps) => {
       <CommentModal
         show={showCommentModal}
         post={post}
-        onClose={() => setShowCommentModal(false)}
+        onClose={() => { setShowCommentModal(false); fetchPost().then(() => {}); }}
       />
     </StyledTweetContainer>
   );

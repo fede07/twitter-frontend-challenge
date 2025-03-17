@@ -92,6 +92,12 @@ const ChatRoomsList = ({ onSelectedChatroom, isHidden }: ChatRoomsListProps) => 
         ))
       )}
 
+      {newChatrooms.length > 0 ? (
+        <StyledEmptyChatListContainer>
+          <h2>Suggested Chats</h2>
+        </StyledEmptyChatListContainer>
+      ) : (<></>)}
+
       {newChatrooms.map((id: string) => (
         <ChatRoom
           key={id}

@@ -7,6 +7,7 @@ export const StyledChatContainer = styled.div<{isHidden?: boolean}>`
     margin: 16px;
     width: 100%;
     min-width: 400px;
+    max-height: 95vh;
 
     @media (max-width: 800px) {
         display: ${(props) => props.isHidden ? 'none' : 'block'};

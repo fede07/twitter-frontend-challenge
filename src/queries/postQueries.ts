@@ -48,7 +48,7 @@ export function UseGetInfinitePostsFromProfile(id: string, limit: number, query:
 export function UseGetPostsFromProfile(id: string, enabled: boolean = true) {
   const service = useHttpRequestService();
   return useQuery({
-    queryKey: ["postsFromProfile", id],
+    queryKey: ["posts-profile", id],
     queryFn: async () => await service.getPostsFromProfile(id),
     staleTime: 10 * 6 * 1000,
     enabled: enabled,
@@ -59,7 +59,7 @@ export function UseGetPostsFromProfile(id: string, enabled: boolean = true) {
 export function UseGetPostById(id: string, enabled: boolean = true) {
   const service = useHttpRequestService();
   return useQuery({
-    queryKey: ["post", id],
+    queryKey: ["post_id", id],
     queryFn: async () => await service.getPostById(id),
     staleTime: 10 * 6 * 1000,
     enabled: enabled,

@@ -13,10 +13,10 @@ import { StyledButtonContainer } from './ButtonContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { useUser } from '../../context/UserContext';
-import { UseGetPosts } from '../../queries/postQueries';
 import { useHttpRequestService } from '../../service/HttpRequestService';
 import { useToast } from '../../context/ToastContext';
 import { ToastType } from '../toast/Toast';
+import { UseGetPosts } from '../../queries/postQueries';
 
 interface TweetBoxProps {
   parentId?: string;
@@ -41,8 +41,9 @@ const TweetBox: React.FC<TweetBoxProps> = ({
   const service = useHttpRequestService();
   const { user } = useUser();
   const { showToast } = useToast();
+  const { feed } = useSelector((state: RootState) => state.user);
 
-  const { refetch } = parentId? UseGetPosts(query,true,parentId) : UseGetPosts(query);
+  const { isError } = parentId ? UseGetPosts(query, true, parentId) : UseGetPosts(query);
 
   // useEffect(() => {
   //   handleGetUser().then(setUser);
@@ -58,7 +59,7 @@ const TweetBox: React.FC<TweetBoxProps> = ({
 
   const handleSubmit = async () => {
     try {
-      await service.createPost({
+      const newTweet = await service.createPost({
         content,
         images,
         parentId: parentId ? parentId : undefined,
@@ -67,8 +68,9 @@ const TweetBox: React.FC<TweetBoxProps> = ({
       setImages([]);
       setImagesPreview([]);
       dispatch(setLength(length + 1));
-      const { data: posts } = await refetch();
-      dispatch(updateFeed(posts));
+      // const { data: posts } = await refetch();
+      const newFeed = [newTweet.post, ...feed];
+      dispatch(updateFeed(newFeed));
       onClose && onClose();
       showToast('Tweet created!', ToastType.SUCCESS);
     } catch (e) {
@@ -87,10 +89,18 @@ const TweetBox: React.FC<TweetBoxProps> = ({
   };
 
   const handleAddImage = (newImages: File[]) => {
-    setImages(newImages);
+    if (images.length + newImages.length >= 5) {
+      showToast('You can only upload 4 images', ToastType.ALERT);
+      return;
+    }
+    setImages((prevState) => [...prevState, ...newImages]);
     const newImagesPreview = newImages.map((i) => URL.createObjectURL(i));
-    setImagesPreview(newImagesPreview);
+    setImagesPreview((prevState) => [...prevState, ...newImagesPreview]);
   };
+
+  if (isError) {
+    showToast(`An unexpected error occurred`, ToastType.ALERT);
+  }
 
   return (
     <StyledTweetBoxContainer>
