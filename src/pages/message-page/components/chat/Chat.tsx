@@ -213,6 +213,12 @@ export const Chat = ({ chatroomId, back, isHidden = false }: ChatProps) => {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              sendMessage();
+              e.preventDefault();
+            }
+          }}
           placeholder={'Start Writing!'}
           size={InputSize.SMALL}
         />
