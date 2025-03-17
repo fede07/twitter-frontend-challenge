@@ -22,4 +22,8 @@ export const StyledTweetContainer = styled.div`
     margin-bottom: 0;
     margin-top: 0;
   }
+    
+    &:hover {
+        cursor: pointer;
+    }
 `;

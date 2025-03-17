@@ -10,6 +10,10 @@ const CommentFeed = ({ postId }: CommentFeedProps) => {
     postId,
   });
 
+  if (loading) {
+    return null
+  }
+
   return (
     <>
       <Feed posts={posts} loading={loading} />

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Post } from '../../service';
-import { UseGetMyProfile } from '../../queries/userQueries';
 import { UseGetPostById } from '../../queries/postQueries';
 import Loader from '../../components/loader/Loader';
 import { StyledContainer } from '../../components/common/Container';
@@ -28,40 +27,40 @@ const PostPage = () => {
   const [loading, setLoading] = useState(true);
 
   const {
-    data: user,
-    isLoading: isLoadingUser,
-    error: errorUser,
-    isError: isErrorUser,
-  } = UseGetMyProfile();
-
-  const {
     data: post_,
     isLoading: isLoadingPost,
     error: errorPost,
     isError: isErrorPost,
   } = UseGetPostById(postId!);
 
-  const fetchPost = () => {
-    if (!post_ || !user) {
-      setError(true);
-      showToast('Error fetching post', ToastType.ERROR);
-      return
+  // const fetchPost = () => {
+  //   if(post_) {
+  //     setPost(post_);
+  //   } else {
+  //     refetchPost().then(r => setPost(post_));
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchPost();
+  // }, [postId]);
+
+  useEffect(() => {
+    if(post_) {
+      setPost(post_);
     }
-    setPost(post_);
-  };
+  } ,[post_]);
 
   useEffect(() => {
-    fetchPost();
-  }, [postId]);
+    if(isErrorPost) {
+      setError(true);
+    }
+  } ,[isErrorPost]);
 
   useEffect(() => {
-    setLoading(isLoadingUser || isLoadingPost);
-  }, [isLoadingPost])
+    setLoading(isLoadingPost);
+  }, [isLoadingPost, postId, post_])
 
-  if (isErrorUser ) {
-    showToast(errorUser.message, ToastType.ALERT);
-    return null;
-  }
 
   if (isErrorPost) {
     showToast(errorPost.message, ToastType.ALERT);
@@ -86,7 +85,7 @@ const PostPage = () => {
   }
 
   return (
-    <StyledContainer borderRight={'1px solid #ebeef0'}>
+    <StyledContainer borderRight={'1px solid #ebeef0'} maxWidth={'600px'}>
       <StyledContainer
         padding={'16px'}
         borderBottom={'1px solid #ebeef0'}

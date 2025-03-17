@@ -42,7 +42,7 @@ const TweetBox: React.FC<TweetBoxProps> = ({
   const { user } = useUser();
   const { showToast } = useToast();
 
-  const { refetch } = UseGetPosts(query);
+  const { refetch } = parentId? UseGetPosts(query,true,parentId) : UseGetPosts(query);
 
   // useEffect(() => {
   //   handleGetUser().then(setUser);

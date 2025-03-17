@@ -1,11 +1,12 @@
 import {useHttpRequestService} from "../service/HttpRequestService"
 import {useInfiniteQuery ,useQuery} from "@tanstack/react-query"
 
-export function UseGetPosts(query: string,enabled: boolean = true) {
+export function UseGetPosts(query: string,enabled: boolean = true, id?: string) {
   const service = useHttpRequestService();
+
   return useQuery({
-    queryKey: ["posts", query],
-    queryFn: async () => await service.getPosts(query),
+    queryKey: id ? ["posts", id] : ["posts", query],
+    queryFn: async () => id ? await service.getCommentsByPostId(id) : await service.getPosts(query),
     staleTime: 10 * 6 * 1000,
     enabled: enabled,
     refetchOnWindowFocus: true,
