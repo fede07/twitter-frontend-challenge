@@ -1,5 +1,7 @@
 import axios from "axios"
 
+console.log("URL: ", process.env.REACT_APP_PUBLIC_URL)
+
 const apiClient = axios.create({
   baseURL: process.env.REACT_APP_PUBLIC_URL || "https://twitter-ieea.onrender.com/api",
   headers: {
